@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Masoud — Motion Graphics & Animation Designer</title>
+  <meta name="description" content="Masoud is a motion graphics and animation designer crafting cinematic visual stories." />
+
+  <!-- Fonts: Cormorant Garamond (display) + DM Sans (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════
+       CURSOR (custom cinematic cursor)
+  ═══════════════════════════════════════════ -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-follower" id="cursorFollower"></div>
+
+  <!-- ═══════════════════════════════════════════
+       NAVIGATION
+  ═══════════════════════════════════════════ -->
+  <nav class="nav" id="nav">
+    <a href="#" class="nav-logo">M<span>.</span></a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#showreel">Showreel</a></li>
+      <li><a href="#portfolio">Work</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="nav-hamburger" id="hamburger" aria-label="Toggle Menu">
+      <span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="#about" class="mobile-link">About</a></li>
+      <li><a href="#showreel" class="mobile-link">Showreel</a></li>
+      <li><a href="#portfolio" class="mobile-link">Work</a></li>
+      <li><a href="#services" class="mobile-link">Services</a></li>
+      <li><a href="#contact" class="mobile-link">Contact</a></li>
+    </ul>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 1: HERO
+  ═══════════════════════════════════════════ -->
+  <section class="hero" id="hero">
+    <!-- Noise grain overlay -->
+    <div class="grain"></div>
+
+    <!-- Ambient light blobs -->
+    <div class="hero-glow hero-glow--1"></div>
+    <div class="hero-glow hero-glow--2"></div>
+    <div class="hero-glow hero-glow--3"></div>
+
+    <!-- Floating reel fragments (decorative) -->
+    <div class="reel-strip reel-strip--left"></div>
+    <div class="reel-strip reel-strip--right"></div>
+
+    <div class="hero-content">
+      <!-- Eyebrow label -->
+      <p class="hero-eyebrow reveal-up">Cairo · Available for Projects</p>
+
+      <!-- Main name — split by letter for stagger animation -->
+      <h1 class="hero-name" aria-label="Masoud">
+        <span class="hero-name__line" id="heroNameLine">
+          <!-- Letters injected via JS -->
+        </span>
+      </h1>
+
+      <!-- Title -->
+      <p class="hero-title reveal-up delay-4">
+        Motion Graphics &amp; Animation Designer
+      </p>
+
+      <!-- Horizontal rule / ornament -->
+      <div class="hero-rule reveal-up delay-5">
+        <span class="rule-line"></span>
+        <span class="rule-dot"></span>
+        <span class="rule-line"></span>
+      </div>
+
+      <!-- CTA buttons -->
+      <div class="hero-cta reveal-up delay-6">
+        <a href="#showreel" class="btn btn--primary">Watch Showreel</a>
+        <a href="#portfolio" class="btn btn--ghost">View Work</a>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="scroll-indicator">
+      <span class="scroll-indicator__label">Scroll</span>
+      <span class="scroll-indicator__line"></span>
+    </div>
+
+    <!-- Stats ticker -->
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat__num" data-count="80">0</span><span class="stat__suffix">+</span>
+        <span class="stat__label">Projects</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <span class="stat__num" data-count="7">0</span><span class="stat__suffix">+</span>
+        <span class="stat__label">Years</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <span class="stat__num" data-count="40">0</span><span class="stat__suffix">+</span>
+        <span class="stat__label">Clients</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 2: ABOUT
+  ═══════════════════════════════════════════ -->
+  <section class="about section" id="about">
+    <div class="container">
+      <div class="about-grid">
+
+        <!-- Left: portrait -->
+        <div class="about-visual">
+          <!-- 
+            REPLACE: swap this div for an <img> tag pointing to your portrait photo.
+            Recommended size: 600×750px or similar portrait ratio.
+            Example: <img src="images/masoud-portrait.jpg" alt="Masoud" />
+          -->
+          <div class="about-portrait-placeholder">
+            <div class="portrait-shimmer"></div>
+            <div class="portrait-label">Your Portrait Here</div>
+            <!-- Decorative frame lines -->
+            <div class="portrait-frame portrait-frame--tl"></div>
+            <div class="portrait-frame portrait-frame--br"></div>
+          </div>
+
+          <!-- Floating badge -->
+          <div class="about-badge">
+            <span class="badge-ring"></span>
+            <span class="badge-text">Motion<br/>Designer</span>
+          </div>
+        </div>
+
+        <!-- Right: copy -->
+        <div class="about-copy">
+          <p class="section-label reveal-left">— Who I Am</p>
+          <h2 class="section-title reveal-left delay-1">
+            Crafting stories<br /><em>through motion</em>
+          </h2>
+          <p class="about-body reveal-left delay-2">
+            I'm Masoud, a motion graphics designer obsessed with the space between
+            stillness and movement — where a single frame becomes a world and timing
+            becomes emotion. I bring brands, narratives, and ideas to life through
+            purposeful animation and cinematic visual language.
+          </p>
+          <p class="about-body reveal-left delay-3">
+            With over seven years crafting motion for agencies, startups, and global
+            brands, I've learned that the best animation isn't the flashiest — it's
+            the one that makes the audience feel something they didn't expect.
+          </p>
+
+          <!-- Signature -->
+          <div class="about-sig reveal-left delay-4">
+            <!-- Replace with your actual signature image if desired -->
+            <span class="sig-text">Masoud</span>
+          </div>
+
+          <!-- Tags -->
+          <div class="about-tags reveal-left delay-5">
+            <span class="tag">After Effects</span>
+            <span class="tag">Cinema 4D</span>
+            <span class="tag">Premiere Pro</span>
+            <span class="tag">Blender</span>
+            <span class="tag">DaVinci Resolve</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 3: SHOWREEL
+  ═══════════════════════════════════════════ -->
+  <section class="showreel section" id="showreel">
+    <div class="container-wide">
+      <div class="showreel-header">
+        <p class="section-label reveal-up">— Showreel</p>
+        <h2 class="section-title reveal-up delay-1">The Work in Motion</h2>
+      </div>
+
+      <!-- 
+        REPLACE: Replace the entire .showreel-placeholder div with a <video> or 
+        YouTube/Vimeo embed. For Vimeo embed example:
+        
+        <div class="showreel-embed">
+          <iframe src="https://player.vimeo.com/video/YOUR_VIDEO_ID?autoplay=0&loop=1&title=0&byline=0&portrait=0"
+            frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        
+        Or for a self-hosted video:
+        <video class="showreel-video" controls poster="images/showreel-poster.jpg">
+          <source src="videos/showreel.mp4" type="video/mp4" />
+        </video>
+      -->
+      <div class="showreel-wrapper reveal-up delay-2">
+        <div class="showreel-placeholder" id="showreelPlaceholder">
+          <div class="reel-noise"></div>
+          <div class="reel-lines"></div>
+          <div class="play-btn" id="playBtn">
+            <div class="play-btn__ring play-btn__ring--1"></div>
+            <div class="play-btn__ring play-btn__ring--2"></div>
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+          </div>
+          <div class="reel-meta">
+            <span>SHOWREEL 2024</span>
+            <span>·</span>
+            <span>02:34</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 4: PORTFOLIO GRID
+  ═══════════════════════════════════════════ -->
+  <section class="portfolio section" id="portfolio">
+    <div class="container">
+      <div class="portfolio-header">
+        <p class="section-label reveal-up">— Selected Work</p>
+        <h2 class="section-title reveal-up delay-1">Projects</h2>
+        <!-- Filter pills -->
+        <div class="filter-pills reveal-up delay-2">
+          <button class="pill pill--active" data-filter="all">All</button>
+          <button class="pill" data-filter="motion">Motion</button>
+          <button class="pill" data-filter="character">Character</button>
+          <button class="pill" data-filter="explainer">Explainer</button>
+          <button class="pill" data-filter="branding">Branding</button>
+        </div>
+      </div>
+
+      <div class="portfolio-grid" id="portfolioGrid">
+
+        <!-- 
+          HOW TO ADD YOUR PROJECTS:
+          Each .project-card has:
+            data-category="..." — used by the filter (motion / character / explainer / branding)
+          
+          Replace the .project-thumb-placeholder div with:
+            <img src="images/project-NAME.jpg" alt="Project Name" />
+          Or add a <video autoplay muted loop> for looping preview clips.
+          
+          Replace the .project-tag, h3, and p with your real project info.
+        -->
+
+        <div class="project-card reveal-up delay-1" data-category="motion">
+          <div class="project-thumb">
+            <div class="project-thumb-placeholder" style="--hue:220">
+              <!-- Replace: <img src="images/project-brand-anthem.jpg" alt="Brand Anthem" /> -->
+              <span class="thumb-label">Project Image</span>
+            </div>
+            <div class="project-overlay">
+              <span class="overlay-cta">View Project ↗</span>
+            </div>
+          </div>
+          <div class="project-info">
+            <span class="project-tag">Motion Graphics</span>
+            <h3>Brand Anthem Film</h3>
+            <p>60-second cinematic brand identity piece</p>
+          </div>
+        </div>
+
+        <div class="project-card reveal-up delay-2" data-category="character">
+          <div class="project-thumb">
+            <div class="project-thumb-placeholder" style="--hue:280">
+              <!-- Replace: <img src="images/project-character.jpg" alt="Character Reel" /> -->
+              <span class="thumb-label">Project Image</span>
+            </div>
+            <div class="project-overlay">
+              <span class="overlay-cta">View Project ↗</span>
+            </div>
+          </div>
+          <div class="project-info">
+            <span class="project-tag">Character Animation</span>
+            <h3>Character Animation Reel</h3>
+            <p>Stylised 2D character series for streaming platform</p>
+          </div>
+        </div>
+
+        <div class="project-card reveal-up delay-3" data-category="explainer">
+          <div class="project-thumb">
+            <div class="project-thumb-placeholder" style="--hue:160">
+              <!-- Replace: <img src="images/project-explainer.jpg" alt="Explainer Video" /> -->
+              <span class="thumb-label">Project Image</span>
+            </div>
+            <div class="project-overlay">
+              <span class="overlay-cta">View Project ↗</span>
+            </div>
+          </div>
+          <div class="project-info">
+            <span class="project-tag">Explainer Video</span>
+            <h3>Fintech Product Explainer</h3>
+            <p>2-minute animated explainer for Series B launch</p>
+          </div>
+        </div>
+
+        <div class="project-card reveal-up delay-1" data-category="branding">
+          <div class="project-thumb">
+            <div class="project-thumb-placeholder" style="--hue:30">
+              <!-- Replace: <img src="images/project-logo.jpg" alt="Logo Animation" /> -->
+              <span class="thumb-label">Project Image</span>
+            </div>
+            <div class="project-overlay">
+              <span class="overlay-cta">View Project ↗</span>
+            </div>
+          </div>
+          <div class="project-info">
+            <span class="project-tag">Branding</span>
+            <h3>Logo Animation Suite</h3>
+            <p>Motion system for luxury fashion brand</p>
+          </div>
+        </div>
+
+        <div class="project-card reveal-up delay-2" data-category="motion">
+          <div class="project-thumb">
+            <div class="project-thumb-placeholder" style="--hue:0">
+              <!-- Replace: <img src="images/project-social.jpg" alt="Social Campaign" /> -->
+              <span class="thumb-label">Project Image</span>
+            </div>
+            <div class="project-overlay">
+              <span class="overlay-cta">View Project ↗</span>
+            </div>
+          </div>
+          <div class="project-info">
+            <span class="project-tag">Motion Graphics</span>
+            <h3>Social Campaign Pack</h3>
+            <p>40+ animated assets for global campaign rollout</p>
+          </div>
+        </div>
+
+        <div class="project-card reveal-up delay-3" data-category="character">
+          <div class="project-thumb">
+            <div class="project-thumb-placeholder" style="--hue:55">
+              <!-- Replace: <img src="images/project-mascot.jpg" alt="Mascot Animation" /> -->
+              <span class="thumb-label">Project Image</span>
+            </div>
+            <div class="project-overlay">
+              <span class="overlay-cta">View Project ↗</span>
+            </div>
+          </div>
+          <div class="project-info">
+            <span class="project-tag">Character Animation</span>
+            <h3>App Mascot Design &amp; Rig</h3>
+            <p>Character design + full animation rig for SaaS onboarding</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 5: SERVICES
+  ═══════════════════════════════════════════ -->
+  <section class="services section" id="services">
+    <div class="grain"></div>
+    <div class="container">
+      <p class="section-label reveal-up">— What I Do</p>
+      <h2 class="section-title reveal-up delay-1">Services</h2>
+
+      <div class="services-grid">
+
+        <div class="service-card reveal-up delay-1">
+          <div class="service-icon">
+            <!-- Motion Graphics icon (film frames) -->
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="6" y="12" width="36" height="24" rx="2"/>
+              <line x1="6" y1="18" x2="42" y2="18"/>
+              <line x1="6" y1="30" x2="42" y2="30"/>
+              <line x1="12" y1="12" x2="12" y2="18"/>
+              <line x1="20" y1="12" x2="20" y2="18"/>
+              <line x1="28" y1="12" x2="28" y2="18"/>
+              <line x1="36" y1="12" x2="36" y2="18"/>
+              <line x1="12" y1="30" x2="12" y2="36"/>
+              <line x1="20" y1="30" x2="20" y2="36"/>
+              <line x1="28" y1="30" x2="28" y2="36"/>
+              <line x1="36" y1="30" x2="36" y2="36"/>
+            </svg>
+          </div>
+          <span class="service-num">01</span>
+          <h3>Motion Graphics</h3>
+          <p>Typographic animation, kinetic design, and broadcast packages that communicate with precision and style.</p>
+          <div class="service-arrow">→</div>
+        </div>
+
+        <div class="service-card reveal-up delay-2">
+          <div class="service-icon">
+            <!-- Character icon -->
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="24" cy="16" r="7"/>
+              <path d="M10 40c0-7.73 6.27-14 14-14s14 6.27 14 14"/>
+              <path d="M24 23v4M20 30l-3 5M28 30l3 5"/>
+            </svg>
+          </div>
+          <span class="service-num">02</span>
+          <h3>Character Animation</h3>
+          <p>Expressive 2D and stylised 3D characters designed, rigged, and animated to connect with your audience.</p>
+          <div class="service-arrow">→</div>
+        </div>
+
+        <div class="service-card reveal-up delay-3">
+          <div class="service-icon">
+            <!-- Explainer icon -->
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="8" y="8" width="32" height="24" rx="2"/>
+              <path d="M16 40h16M24 32v8"/>
+              <path d="M20 20l8-4-8-4v8z" fill="currentColor" stroke="none"/>
+            </svg>
+          </div>
+          <span class="service-num">03</span>
+          <h3>Explainer Videos</h3>
+          <p>Complex ideas made simple and compelling — animated explainers that convert, educate, and inspire action.</p>
+          <div class="service-arrow">→</div>
+        </div>
+
+        <div class="service-card reveal-up delay-4">
+          <div class="service-icon">
+            <!-- Editing icon -->
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M6 24h36"/>
+              <path d="M6 16h12v16H6zM30 16h12v16H30z"/>
+              <path d="M18 20v8M24 20v8"/>
+            </svg>
+          </div>
+          <span class="service-num">04</span>
+          <h3>Video Editing</h3>
+          <p>Narrative editing, colour grading, and sound design that transforms raw footage into polished stories.</p>
+          <div class="service-arrow">→</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 6: SKILLS
+  ═══════════════════════════════════════════ -->
+  <section class="skills section" id="skills">
+    <div class="container">
+      <p class="section-label reveal-up">— Toolkit</p>
+      <h2 class="section-title reveal-up delay-1">Skills &amp; Software</h2>
+
+      <div class="skills-layout">
+
+        <!-- Skill bars -->
+        <div class="skills-bars">
+          <div class="skill-row reveal-left delay-1">
+            <div class="skill-meta">
+              <span class="skill-name">After Effects</span>
+              <span class="skill-pct">95%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-fill" data-width="95"></div></div>
+          </div>
+          <div class="skill-row reveal-left delay-2">
+            <div class="skill-meta">
+              <span class="skill-name">Cinema 4D</span>
+              <span class="skill-pct">80%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-fill" data-width="80"></div></div>
+          </div>
+          <div class="skill-row reveal-left delay-3">
+            <div class="skill-meta">
+              <span class="skill-name">Premiere Pro</span>
+              <span class="skill-pct">90%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-fill" data-width="90"></div></div>
+          </div>
+          <div class="skill-row reveal-left delay-4">
+            <div class="skill-meta">
+              <span class="skill-name">Blender</span>
+              <span class="skill-pct">70%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-fill" data-width="70"></div></div>
+          </div>
+          <div class="skill-row reveal-left delay-5">
+            <div class="skill-meta">
+              <span class="skill-name">DaVinci Resolve</span>
+              <span class="skill-pct">85%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-fill" data-width="85"></div></div>
+          </div>
+          <div class="skill-row reveal-left delay-6">
+            <div class="skill-meta">
+              <span class="skill-name">Illustrator / Photoshop</span>
+              <span class="skill-pct">88%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-fill" data-width="88"></div></div>
+          </div>
+        </div>
+
+        <!-- Radar / soft skills -->
+        <div class="skills-soft reveal-right delay-2">
+          <h3>Creative Strengths</h3>
+          <ul class="soft-list">
+            <li>
+              <span class="soft-label">Storytelling</span>
+              <span class="soft-dots">
+                <i class="dot dot--filled"></i><i class="dot dot--filled"></i>
+                <i class="dot dot--filled"></i><i class="dot dot--filled"></i>
+                <i class="dot dot--filled"></i>
+              </span>
+            </li>
+            <li>
+              <span class="soft-label">Visual Timing</span>
+              <span class="soft-dots">
+                <i class="dot dot--filled"></i><i class="dot dot--filled"></i>
+                <i class="dot dot--filled"></i><i class="dot dot--filled"></i>
+                <i class="dot dot--filled"></i>
+              </span>
+            </li>
+            <li>
+              <span class="soft-label">Concept Development</span>
+              <span class="soft-dots">
+                <i class="dot dot--filled"></i><i class="dot dot--filled"></i>
+                <i class="dot dot--filled"></i><i class="dot dot--filled"></i>
+                <i class="dot dot--half"></i>
+              </span>
+            </li>
+            <li>
+              <span class="soft-label">Art Direction</span>
+              <span class="soft-dots">
+                <i class="dot dot--filled"></i><i class="dot dot--filled"></i>
+                <i class="dot dot--filled"></i><i class="dot dot--filled"></i>
+                <i class="dot dot--half"></i>
+              </span>
+            </li>
+            <li>
+              <span class="soft-label">Client Communication</span>
+              <span class="soft-dots">
+                <i class="dot dot--filled"></i><i class="dot dot--filled"></i>
+                <i class="dot dot--filled"></i><i class="dot dot--filled"></i>
+                <i class="dot dot--filled"></i>
+              </span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 7: CONTACT
+  ═══════════════════════════════════════════ -->
+  <section class="contact section" id="contact">
+    <div class="hero-glow hero-glow--1" style="opacity:.4"></div>
+    <div class="hero-glow hero-glow--2" style="opacity:.3"></div>
+    <div class="grain"></div>
+    <div class="container">
+      <p class="section-label reveal-up">— Let's Work</p>
+      <h2 class="contact-headline reveal-up delay-1">
+        Have a project <br/><em>in mind?</em>
+      </h2>
+      <p class="contact-sub reveal-up delay-2">
+        I'm currently open for freelance and collaborative work.
+        Let's create something worth watching.
+      </p>
+
+      <!-- Email CTA -->
+      <!-- REPLACE: swap the href with your actual email address -->
+      <a href="mailto:hello@masoud.design" class="email-link reveal-up delay-3">
+        <span class="email-link__text">hello@masoud.design</span>
+        <span class="email-link__arrow">↗</span>
+      </a>
+
+      <!-- Social links -->
+      <!-- REPLACE: swap each href with your actual profile URLs -->
+      <div class="social-links reveal-up delay-4">
+        <a href="https://behance.net/" target="_blank" rel="noopener" class="social-link">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.5 11.5C8.88 11.5 10 10.38 10 9s-1.12-2.5-2.5-2.5H3v9h4.8c1.49 0 2.7-1.21 2.7-2.7 0-1.04-.6-1.94-1.5-2.3zM5 8h2.3c.66 0 1.2.54 1.2 1.2 0 .66-.54 1.2-1.2 1.2H5V8zm2.5 6.5H5v-2.5h2.5c.69 0 1.25.56 1.25 1.25S8.19 14.5 7.5 14.5zM20 11h-5.5c0-1.93 1.57-3.5 3.5-3.5.97 0 1.85.4 2.49 1.04l1.41-1.41A5.48 5.48 0 0018 5.5c-3.04 0-5.5 2.46-5.5 5.5s2.46 5.5 5.5 5.5c1.43 0 2.73-.55 3.7-1.44l-1.41-1.42A3.47 3.47 0 0118 15c-1.38 0-2.57-.79-3.15-1.95H20V11z"/></svg>
+          Behance
+        </a>
+        <a href="https://vimeo.com/" target="_blank" rel="noopener" class="social-link">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.8 8.18c-.09 2.07-1.54 4.9-4.34 8.49C14.57 20.5 12.16 22.5 10.1 22.5c-1.33 0-2.45-1.22-3.37-3.66l-1.84-6.73C4.21 9.67 3.57 8.5 2.86 8.5c-.16 0-.7.33-1.63.97L0 8.14c1.03-.9 2.04-1.8 3.03-2.71 1.36-1.18 2.38-1.8 3.06-1.86 1.61-.15 2.6.94 2.97 3.28.4 2.53.68 4.1.83 4.71.46 2.09 1 3.14 1.59 3.14.45 0 1.12-.71 2.02-2.12.9-1.41 1.38-2.49 1.44-3.23.13-1.22-.35-1.83-1.44-1.83-.51 0-1.04.12-1.58.35.05-1.58.6-3.04 1.64-4.38C14.61 2.19 15.91 1.5 17.4 1.5c1.2 0 1.74.69 2.01 2.06.28 1.37-.15 3.06.39 4.62z"/></svg>
+          Vimeo
+        </a>
+        <a href="https://linkedin.com/" target="_blank" rel="noopener" class="social-link">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.37V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.59 0 4.26 2.37 4.26 5.44v6.3zM5.34 7.43a2.06 2.06 0 11.001-4.121 2.06 2.06 0 010 4.12zm1.78 13.02H3.56V9h3.56v11.45zM22.23 0H1.77C.8 0 0 .77 0 1.72v20.56C0 23.23.8 24 1.77 24h20.46c.97 0 1.77-.77 1.77-1.72V1.72C24 .77 23.2 0 22.23 0z"/></svg>
+          LinkedIn
+        </a>
+        <a href="https://instagram.com/" target="_blank" rel="noopener" class="social-link">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          Instagram
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="footer-logo">M<span>.</span></span>
+          <p>Motion Graphics &amp; Animation Designer</p>
+        </div>
+        <div class="footer-nav">
+          <a href="#about">About</a>
+          <a href="#showreel">Showreel</a>
+          <a href="#portfolio">Work</a>
+          <a href="#services">Services</a>
+          <a href="#contact">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span id="year"></span> Masoud. All rights reserved.</span>
+        <span>Designed &amp; Built with intention.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to top -->
+  <button class="back-top" id="backTop" aria-label="Back to top">↑</button>
+
+  <script src="script.js"></script>
+</body>
+</html>
