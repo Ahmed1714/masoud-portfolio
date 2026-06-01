@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">تحفيظ القرآن الكريم</string>
+    <string name="listen_mode">وضع الاستماع</string>
+    <string name="memorize_mode">وضع الحفظ</string>
+    <string name="tasmi_mode">وضع التسميع</string>
+    <string name="progress">التقدم</string>
+    <string name="sheikh_name">الشيخ عبد الباسط عبد الصمد</string>
+    <string name="murattal">مرتّل</string>
+    <string name="mujawwad">مجوّد</string>
+    <string name="correct">صحيح</string>
+    <string name="acceptable">مقبول</string>
+    <string name="wrong">خطأ</string>
+    <string name="memorized">محفوظة</string>
+    <string name="in_progress">قيد الحفظ</string>
+    <string name="not_started">لم أبدأ</string>
+</resources>
