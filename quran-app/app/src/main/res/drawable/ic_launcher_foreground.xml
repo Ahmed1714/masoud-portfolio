@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Open Book / Quran icon -->
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M54,24 L30,30 L30,84 L54,78 L78,84 L78,30 Z" />
+    <path
+        android:fillColor="#1B5E20"
+        android:pathData="M54,24 L54,78"
+        android:strokeColor="#1B5E20"
+        android:strokeWidth="2"
+        android:fillAlpha="0" />
+    <path
+        android:fillColor="#1B5E20"
+        android:pathData="M36,40 L52,40 M36,48 L52,48 M36,56 L52,56 M36,64 L52,64"
+        android:strokeColor="#1B5E20"
+        android:strokeWidth="1.5"
+        android:fillAlpha="0" />
+    <path
+        android:fillColor="#1B5E20"
+        android:pathData="M56,40 L72,40 M56,48 L72,48 M56,56 L72,56 M56,64 L72,64"
+        android:strokeColor="#1B5E20"
+        android:strokeWidth="1.5"
+        android:fillAlpha="0" />
+</vector>
