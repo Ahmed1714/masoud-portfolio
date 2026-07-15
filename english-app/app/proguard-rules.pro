@@ -1,0 +1,3 @@
+-keep class com.englishapp.learning.data.db.entities.** { *; }
+-keepattributes Signature
+-keepattributes *Annotation*
