@@ -1,0 +1,147 @@
+package com.englishapp.learning.data
+
+import com.englishapp.learning.data.db.entities.WordEntity
+
+object SeedWords {
+
+    const val CATEGORY_DAILY = "Daily Life"
+    const val CATEGORY_FOOD = "Food & Drink"
+    const val CATEGORY_TRAVEL = "Travel"
+    const val CATEGORY_BUSINESS = "Business"
+    const val CATEGORY_FEELINGS = "Feelings"
+    const val CATEGORY_TECH = "Technology"
+
+    val words: List<WordEntity> = listOf(
+        // Daily Life
+        WordEntity(1, "morning", "صباح", "I go for a run every morning.", CATEGORY_DAILY, "Beginner"),
+        WordEntity(2, "schedule", "جدول مواعيد", "Check your schedule before booking.", CATEGORY_DAILY, "Intermediate"),
+        WordEntity(3, "chore", "مهمة منزلية", "Doing chores teaches responsibility.", CATEGORY_DAILY, "Intermediate"),
+        WordEntity(4, "neighbor", "جار", "My neighbor waters my plants.", CATEGORY_DAILY, "Beginner"),
+        WordEntity(5, "errand", "مشوار", "I have a few errands to run today.", CATEGORY_DAILY, "Intermediate"),
+        WordEntity(6, "commute", "التنقل للعمل", "My commute takes forty minutes.", CATEGORY_DAILY, "Intermediate"),
+        WordEntity(7, "habit", "عادة", "Reading before bed is a good habit.", CATEGORY_DAILY, "Beginner"),
+        WordEntity(8, "laundry", "غسيل الملابس", "I do laundry every Sunday.", CATEGORY_DAILY, "Beginner"),
+        WordEntity(9, "appointment", "موعد", "I have a dentist appointment at noon.", CATEGORY_DAILY, "Beginner"),
+        WordEntity(10, "routine", "روتين", "A morning routine boosts productivity.", CATEGORY_DAILY, "Intermediate"),
+        WordEntity(11, "grocery", "بقالة", "We need to buy groceries tonight.", CATEGORY_DAILY, "Beginner"),
+        WordEntity(12, "leisure", "وقت فراغ", "I spend my leisure time painting.", CATEGORY_DAILY, "Intermediate"),
+        WordEntity(13, "household", "منزلي", "We split the household expenses.", CATEGORY_DAILY, "Intermediate"),
+        WordEntity(14, "weekday", "يوم من أيام الأسبوع", "I work out on weekdays only.", CATEGORY_DAILY, "Beginner"),
+        WordEntity(15, "reminder", "تذكير", "Set a reminder for the meeting.", CATEGORY_DAILY, "Beginner"),
+        WordEntity(16, "nap", "قيلولة", "I took a short nap after lunch.", CATEGORY_DAILY, "Beginner"),
+        WordEntity(17, "alarm", "منبه", "My alarm goes off at six.", CATEGORY_DAILY, "Beginner"),
+        WordEntity(18, "chores list", "قائمة مهام", "She wrote a chores list for the week.", CATEGORY_DAILY, "Intermediate"),
+        WordEntity(19, "weekend", "عطلة نهاية الأسبوع", "We are traveling this weekend.", CATEGORY_DAILY, "Beginner"),
+        WordEntity(20, "punctual", "دقيق في المواعيد", "He is always punctual for meetings.", CATEGORY_DAILY, "Intermediate"),
+
+        // Food & Drink
+        WordEntity(21, "recipe", "وصفة", "This recipe needs two eggs.", CATEGORY_FOOD, "Beginner"),
+        WordEntity(22, "flavor", "نكهة", "The soup has a rich flavor.", CATEGORY_FOOD, "Beginner"),
+        WordEntity(23, "ingredient", "مكوّن", "Flour is the main ingredient.", CATEGORY_FOOD, "Beginner"),
+        WordEntity(24, "leftovers", "بقايا الطعام", "We had leftovers for dinner.", CATEGORY_FOOD, "Intermediate"),
+        WordEntity(25, "appetizer", "مقبلات", "We ordered an appetizer to share.", CATEGORY_FOOD, "Intermediate"),
+        WordEntity(26, "beverage", "مشروب", "Choose a beverage with your meal.", CATEGORY_FOOD, "Intermediate"),
+        WordEntity(27, "spicy", "حار", "This curry is very spicy.", CATEGORY_FOOD, "Beginner"),
+        WordEntity(28, "reservation", "حجز", "I made a reservation for eight.", CATEGORY_FOOD, "Intermediate"),
+        WordEntity(29, "diet", "نظام غذائي", "She follows a balanced diet.", CATEGORY_FOOD, "Beginner"),
+        WordEntity(30, "grill", "شواء", "We grilled vegetables for lunch.", CATEGORY_FOOD, "Beginner"),
+        WordEntity(31, "portion", "حصة/كمية", "The portion size was huge.", CATEGORY_FOOD, "Intermediate"),
+        WordEntity(32, "dessert", "حلوى", "We shared a chocolate dessert.", CATEGORY_FOOD, "Beginner"),
+        WordEntity(33, "utensil", "أداة مائدة", "Pass me a clean utensil.", CATEGORY_FOOD, "Intermediate"),
+        WordEntity(34, "fresh", "طازج", "These vegetables are very fresh.", CATEGORY_FOOD, "Beginner"),
+        WordEntity(35, "bill", "فاتورة", "Can we have the bill, please?", CATEGORY_FOOD, "Beginner"),
+        WordEntity(36, "leftover bread", "خبز متبقي", "Use leftover bread for croutons.", CATEGORY_FOOD, "Intermediate"),
+        WordEntity(37, "sour", "حامض", "Lemons taste sour.", CATEGORY_FOOD, "Beginner"),
+        WordEntity(38, "seasoning", "توابل", "Add seasoning to taste.", CATEGORY_FOOD, "Intermediate"),
+        WordEntity(39, "snack", "وجبة خفيفة", "I need a snack before the gym.", CATEGORY_FOOD, "Beginner"),
+        WordEntity(40, "starving", "جائع جداً", "I'm starving, let's eat now.", CATEGORY_FOOD, "Intermediate"),
+
+        // Travel
+        WordEntity(41, "itinerary", "خط سير الرحلة", "Our itinerary includes three cities.", CATEGORY_TRAVEL, "Intermediate"),
+        WordEntity(42, "luggage", "أمتعة", "My luggage was lost at the airport.", CATEGORY_TRAVEL, "Beginner"),
+        WordEntity(43, "boarding pass", "بطاقة صعود الطائرة", "Show your boarding pass at the gate.", CATEGORY_TRAVEL, "Beginner"),
+        WordEntity(44, "destination", "وجهة", "Paris is our final destination.", CATEGORY_TRAVEL, "Intermediate"),
+        WordEntity(45, "layover", "توقف بين رحلتين", "We have a two hour layover.", CATEGORY_TRAVEL, "Intermediate"),
+        WordEntity(46, "passport", "جواز سفر", "Don't forget your passport.", CATEGORY_TRAVEL, "Beginner"),
+        WordEntity(47, "customs", "الجمارك", "We passed through customs quickly.", CATEGORY_TRAVEL, "Intermediate"),
+        WordEntity(48, "currency", "عملة", "Exchange your currency at the bank.", CATEGORY_TRAVEL, "Intermediate"),
+        WordEntity(49, "accommodation", "إقامة/سكن", "We booked our accommodation online.", CATEGORY_TRAVEL, "Intermediate"),
+        WordEntity(50, "sightseeing", "التجول السياحي", "We went sightseeing all day.", CATEGORY_TRAVEL, "Intermediate"),
+        WordEntity(51, "delay", "تأخير", "The flight had a two hour delay.", CATEGORY_TRAVEL, "Beginner"),
+        WordEntity(52, "souvenir", "تذكار", "I bought a souvenir for my mom.", CATEGORY_TRAVEL, "Beginner"),
+        WordEntity(53, "checked bag", "حقيبة مسجلة", "One checked bag is included.", CATEGORY_TRAVEL, "Intermediate"),
+        WordEntity(54, "visa", "تأشيرة", "You need a visa to enter.", CATEGORY_TRAVEL, "Beginner"),
+        WordEntity(55, "tourist", "سائح", "The city is full of tourists.", CATEGORY_TRAVEL, "Beginner"),
+        WordEntity(56, "map", "خريطة", "Use the map to find the museum.", CATEGORY_TRAVEL, "Beginner"),
+        WordEntity(57, "ticket", "تذكرة", "I bought a round trip ticket.", CATEGORY_TRAVEL, "Beginner"),
+        WordEntity(58, "departure", "مغادرة", "The departure time changed.", CATEGORY_TRAVEL, "Intermediate"),
+        WordEntity(59, "journey", "رحلة", "It was a long but fun journey.", CATEGORY_TRAVEL, "Beginner"),
+        WordEntity(60, "backpack", "حقيبة ظهر", "She packed light in a backpack.", CATEGORY_TRAVEL, "Beginner"),
+
+        // Business
+        WordEntity(61, "deadline", "موعد نهائي", "The deadline is next Friday.", CATEGORY_BUSINESS, "Intermediate"),
+        WordEntity(62, "revenue", "إيراد", "Revenue grew by ten percent.", CATEGORY_BUSINESS, "Intermediate"),
+        WordEntity(63, "negotiate", "يتفاوض", "We need to negotiate the price.", CATEGORY_BUSINESS, "Intermediate"),
+        WordEntity(64, "colleague", "زميل عمل", "My colleague helped with the report.", CATEGORY_BUSINESS, "Beginner"),
+        WordEntity(65, "invoice", "فاتورة", "Please send the invoice today.", CATEGORY_BUSINESS, "Intermediate"),
+        WordEntity(66, "budget", "ميزانية", "We are over budget this month.", CATEGORY_BUSINESS, "Beginner"),
+        WordEntity(67, "client", "عميل", "The client approved the proposal.", CATEGORY_BUSINESS, "Beginner"),
+        WordEntity(68, "meeting", "اجتماع", "The meeting starts at nine.", CATEGORY_BUSINESS, "Beginner"),
+        WordEntity(69, "strategy", "استراتيجية", "Our marketing strategy is changing.", CATEGORY_BUSINESS, "Intermediate"),
+        WordEntity(70, "promotion", "ترقية", "She got a promotion last month.", CATEGORY_BUSINESS, "Beginner"),
+        WordEntity(71, "contract", "عقد", "Both sides signed the contract.", CATEGORY_BUSINESS, "Beginner"),
+        WordEntity(72, "salary", "راتب", "The salary includes a bonus.", CATEGORY_BUSINESS, "Beginner"),
+        WordEntity(73, "resign", "يستقيل", "He decided to resign yesterday.", CATEGORY_BUSINESS, "Intermediate"),
+        WordEntity(74, "shareholder", "مساهم", "Shareholders approved the merger.", CATEGORY_BUSINESS, "Intermediate"),
+        WordEntity(75, "presentation", "عرض تقديمي", "I'm preparing a presentation.", CATEGORY_BUSINESS, "Beginner"),
+        WordEntity(76, "startup", "شركة ناشئة", "They founded a tech startup.", CATEGORY_BUSINESS, "Beginner"),
+        WordEntity(77, "supervisor", "مشرف", "My supervisor reviewed the plan.", CATEGORY_BUSINESS, "Intermediate"),
+        WordEntity(78, "efficient", "فعّال", "The new process is more efficient.", CATEGORY_BUSINESS, "Intermediate"),
+        WordEntity(79, "outsource", "تعهيد خارجي", "We outsource our customer support.", CATEGORY_BUSINESS, "Intermediate"),
+        WordEntity(80, "profit", "ربح", "The company made a solid profit.", CATEGORY_BUSINESS, "Beginner"),
+
+        // Feelings
+        WordEntity(81, "excited", "متحمس", "I'm excited about the trip.", CATEGORY_FEELINGS, "Beginner"),
+        WordEntity(82, "anxious", "قلق", "She felt anxious before the exam.", CATEGORY_FEELINGS, "Intermediate"),
+        WordEntity(83, "grateful", "ممتن", "I'm grateful for your help.", CATEGORY_FEELINGS, "Beginner"),
+        WordEntity(84, "frustrated", "محبط", "He was frustrated with the delay.", CATEGORY_FEELINGS, "Intermediate"),
+        WordEntity(85, "confident", "واثق", "She spoke with confident tone.", CATEGORY_FEELINGS, "Beginner"),
+        WordEntity(86, "overwhelmed", "مرهق ذهنياً", "I felt overwhelmed by the workload.", CATEGORY_FEELINGS, "Intermediate"),
+        WordEntity(87, "relieved", "مرتاح البال", "We were relieved when he arrived.", CATEGORY_FEELINGS, "Intermediate"),
+        WordEntity(88, "curious", "فضولي", "The child was curious about everything.", CATEGORY_FEELINGS, "Beginner"),
+        WordEntity(89, "nervous", "متوتر", "I'm nervous about the interview.", CATEGORY_FEELINGS, "Beginner"),
+        WordEntity(90, "proud", "فخور", "They are proud of their team.", CATEGORY_FEELINGS, "Beginner"),
+        WordEntity(91, "content", "راضٍ", "He seems content with his life.", CATEGORY_FEELINGS, "Intermediate"),
+        WordEntity(92, "lonely", "وحيد", "She felt lonely in the new city.", CATEGORY_FEELINGS, "Beginner"),
+        WordEntity(93, "motivated", "متحفز", "The coach kept us motivated.", CATEGORY_FEELINGS, "Intermediate"),
+        WordEntity(94, "embarrassed", "محرج", "I was embarrassed by the mistake.", CATEGORY_FEELINGS, "Intermediate"),
+        WordEntity(95, "hopeful", "متفائل", "We remain hopeful about the future.", CATEGORY_FEELINGS, "Beginner"),
+        WordEntity(96, "jealous", "غيور", "He felt jealous of his brother.", CATEGORY_FEELINGS, "Beginner"),
+        WordEntity(97, "calm", "هادئ", "Stay calm during the storm.", CATEGORY_FEELINGS, "Beginner"),
+        WordEntity(98, "disappointed", "خائب الأمل", "She was disappointed with the result.", CATEGORY_FEELINGS, "Intermediate"),
+        WordEntity(99, "surprised", "متفاجئ", "We were surprised by the news.", CATEGORY_FEELINGS, "Beginner"),
+        WordEntity(100, "determined", "مصمم", "He is determined to succeed.", CATEGORY_FEELINGS, "Intermediate"),
+
+        // Technology
+        WordEntity(101, "device", "جهاز", "Charge your device overnight.", CATEGORY_TECH, "Beginner"),
+        WordEntity(102, "software", "برمجيات", "Update the software regularly.", CATEGORY_TECH, "Beginner"),
+        WordEntity(103, "upload", "يرفع (ملف)", "Upload the file to the server.", CATEGORY_TECH, "Beginner"),
+        WordEntity(104, "download", "يحمّل (ملف)", "Download the app from the store.", CATEGORY_TECH, "Beginner"),
+        WordEntity(105, "password", "كلمة مرور", "Choose a strong password.", CATEGORY_TECH, "Beginner"),
+        WordEntity(106, "network", "شبكة", "The network is down right now.", CATEGORY_TECH, "Beginner"),
+        WordEntity(107, "backup", "نسخة احتياطية", "Always keep a backup of your files.", CATEGORY_TECH, "Intermediate"),
+        WordEntity(108, "browser", "متصفح", "Open the link in a new browser tab.", CATEGORY_TECH, "Beginner"),
+        WordEntity(109, "notification", "إشعار", "I got a notification about the update.", CATEGORY_TECH, "Beginner"),
+        WordEntity(110, "encryption", "تشفير", "The data uses strong encryption.", CATEGORY_TECH, "Intermediate"),
+        WordEntity(111, "server", "خادم", "The server crashed last night.", CATEGORY_TECH, "Intermediate"),
+        WordEntity(112, "bandwidth", "عرض النطاق الترددي", "This video needs more bandwidth.", CATEGORY_TECH, "Intermediate"),
+        WordEntity(113, "firmware", "برمجيات ثابتة", "Update the router's firmware.", CATEGORY_TECH, "Intermediate"),
+        WordEntity(114, "cloud storage", "تخزين سحابي", "I save my photos in cloud storage.", CATEGORY_TECH, "Beginner"),
+        WordEntity(115, "shortcut", "اختصار", "Use a keyboard shortcut to save time.", CATEGORY_TECH, "Beginner"),
+        WordEntity(116, "glitch", "خلل بسيط", "There was a small glitch in the app.", CATEGORY_TECH, "Intermediate"),
+        WordEntity(117, "interface", "واجهة", "The new interface is easier to use.", CATEGORY_TECH, "Intermediate"),
+        WordEntity(118, "algorithm", "خوارزمية", "The algorithm sorts the data fast.", CATEGORY_TECH, "Intermediate"),
+        WordEntity(119, "firewall", "جدار حماية", "The firewall blocked the attack.", CATEGORY_TECH, "Intermediate"),
+        WordEntity(120, "update", "تحديث", "Install the latest update.", CATEGORY_TECH, "Beginner")
+    )
+}

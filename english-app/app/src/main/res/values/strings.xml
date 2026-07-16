@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">English Master</string>
+    <string name="flashcards">Flashcards</string>
+    <string name="quiz">Quiz</string>
+    <string name="progress">Progress</string>
+    <string name="review_due">Review due words</string>
+    <string name="new_status">New</string>
+    <string name="learning_status">Learning</string>
+    <string name="reviewing_status">Reviewing</string>
+    <string name="mastered_status">Mastered</string>
+</resources>
