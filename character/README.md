@@ -79,6 +79,8 @@ clothing and colours. Because the generated assets live on Higgsfield storage,
 which this repo's build environment cannot reach, they are linked rather than
 committed:
 
+- Rendered turnaround of the textured model (front, 3/4, side, back):
+  <https://d2ol7oe51mr4n9.cloudfront.net/user_2xhkOVQnFmFjZSspDkDWygRGWsG/02f04dc3-f78c-4d2f-8458-193c93833e00.png>
 - Bundle (GLB + STL + parts + texture):
   <https://d2ol7oe51mr4n9.cloudfront.net/user_2xhkOVQnFmFjZSspDkDWygRGWsG/70384475-172d-4290-94e8-2e4a7da2bdfe.zip>
 - Rigged GLB on its own:
