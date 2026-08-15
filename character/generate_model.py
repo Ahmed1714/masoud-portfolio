@@ -235,43 +235,42 @@ def build_body(h: float):
 
 
 def build_arms(h: float):
-    """Arms folded across the chest, right forearm resting on top."""
-    parts = []
+    """Arms folded across the chest, returned per limb segment so they pose."""
+    groups: dict[str, list] = {}
     sh_z = _f(0.378, h)
     el_z = _f(0.472, h)
 
-    for sx in (-1, 1):
+    for sx, side in ((1, "left"), (-1, "right")):
         # Shoulder cap and upper arm dropping to the elbow at the side.
-        parts.append(ellipsoid([0.044 * h, 0.046 * h, 0.042 * h], [sx * 0.108 * h, 0.0, sh_z]))
-        parts.append(
+        groups[f"arm_upper_{side}"] = [
+            ellipsoid([0.044 * h, 0.046 * h, 0.042 * h], [sx * 0.108 * h, 0.0, sh_z]),
             capsule(
                 [sx * 0.112 * h, 0.004 * h, sh_z],
                 [sx * 0.130 * h, 0.016 * h, el_z],
                 0.040 * h,
                 0.034 * h,
-            )
-        )
+            ),
+        ]
 
     # Two forearms crossing in front of the chest at slightly different heights.
-    for sx, z_t, y_off in ((1, 0.482, 0.104), (-1, 0.450, 0.098)):
+    for sx, side, z_t, y_off in ((1, "left", 0.482, 0.104), (-1, "right", 0.450, 0.098)):
         z = _f(z_t, h)
-        parts.append(
+        groups[f"arm_fore_{side}"] = [
             capsule(
                 [sx * 0.124 * h, 0.046 * h, el_z + 0.004 * h],
                 [-sx * 0.078 * h, y_off * h, z],
                 0.038 * h,
                 0.033 * h,
-            )
-        )
-        # Hand tucked under the opposite upper arm.
-        parts.append(
+            ),
+            # Hand tucked under the opposite upper arm.
             ellipsoid(
                 [0.036 * h, 0.033 * h, 0.029 * h],
                 [-sx * 0.096 * h, y_off * h - 0.012 * h, z],
-            )
-        )
+            ),
+        ]
 
-    # Smart watch on the left wrist (character's left, +X here).
+    # Smart watch. The arms are folded, so the right forearm is the one whose
+    # wrist ends up over on the +X side of the chest.
     watch = loft(
         [
             (0.0, 0.036 * h, 0.034 * h, 0.0, 0.0),
@@ -281,18 +280,17 @@ def build_arms(h: float):
         n_z=8,
         power=2.6,
     )
-    T = trimesh.transformations.rotation_matrix(math.radians(90), [0, 1, 0])
-    watch.apply_transform(T)
+    watch.apply_transform(trimesh.transformations.rotation_matrix(math.radians(90), [0, 1, 0]))
     watch.apply_translation([0.052 * h, 0.092 * h, _f(0.455, h)])
-    parts.append(watch)
-    return parts
+    groups["arm_fore_right"].append(watch)
+    return groups
 
 
 def build_legs(h: float):
-    parts = []
-    for sx in (-1, 1):
+    groups: dict[str, list] = {}
+    for sx, side in ((1, "left"), (-1, "right")):
         x = sx * 0.062 * h
-        parts.append(
+        groups[f"leg_{side}"] = [
             loft(
                 [
                     (_f(0.905, h), 0.068 * h, 0.076 * h, x, 0.008 * h),
@@ -306,15 +304,15 @@ def build_legs(h: float):
                 n_theta=56,
                 power=2.15,
             )
-        )
-    return parts
+        ]
+    return groups
 
 
 def build_shoes(h: float):
     """Chunky sneakers: a wide sole with a rounded upper and a raised tongue."""
-    parts = []
+    groups: dict[str, list] = {}
     sole_top = 0.026 * h
-    for sx in (-1, 1):
+    for sx, side in ((1, "left"), (-1, "right")):
         x = sx * 0.070 * h
         toe_out = sx * 0.012 * h
         sole = loft(
@@ -338,8 +336,8 @@ def build_shoes(h: float):
             n_z=48,
             power=2.6,
         )
-        parts += [sole, upper]
-    return parts
+        groups[f"foot_{side}"] = [sole, upper]
+    return groups
 
 
 def build_base(h: float, thickness: float = 0.020):
@@ -356,16 +354,89 @@ def build_base(h: float, thickness: float = 0.020):
     )
 
 
-def build_character(height: float = 130.0, with_base: bool = True) -> trimesh.Trimesh:
-    parts = (
-        build_head(height)
-        + build_body(height)
-        + build_arms(height)
-        + build_legs(height)
-        + build_shoes(height)
-    )
+# --------------------------------------------------------------------------
+# Joints: (parent group, pivot as (x_fraction, y_fraction, height_fraction))
+# Rotating a group carries its children with it, so the limbs stay attached.
+# --------------------------------------------------------------------------
+
+JOINTS = {
+    "head": ("torso", (0.000, 0.000, 0.352)),
+    "arm_upper_left": ("torso", (0.108, 0.000, 0.378)),
+    "arm_upper_right": ("torso", (-0.108, 0.000, 0.378)),
+    "arm_fore_left": ("arm_upper_left", (0.128, 0.014, 0.472)),
+    "arm_fore_right": ("arm_upper_right", (-0.128, 0.014, 0.472)),
+    "leg_left": ("torso", (0.062, 0.000, 0.610)),
+    "leg_right": ("torso", (-0.062, 0.000, 0.610)),
+    "foot_left": ("leg_left", (0.066, 0.000, 0.905)),
+    "foot_right": ("leg_right", (-0.066, 0.000, 0.905)),
+}
+
+GROUP_ORDER = [
+    "torso",
+    "head",
+    "arm_upper_left",
+    "arm_fore_left",
+    "arm_upper_right",
+    "arm_fore_right",
+    "leg_left",
+    "foot_left",
+    "leg_right",
+    "foot_right",
+    "base",
+]
+
+
+def build_groups(height: float, with_base: bool = True) -> dict:
+    """All the character's parts, keyed by the joint group they belong to."""
+    groups = {"head": build_head(height), "torso": build_body(height)}
+    groups.update(build_arms(height))
+    groups.update(build_legs(height))
+    groups.update(build_shoes(height))
     if with_base:
-        parts.append(build_base(height))
+        groups["base"] = [build_base(height)]
+    return {k: groups[k] for k in GROUP_ORDER if k in groups}
+
+
+def _joint_transforms(pose: dict, h: float) -> dict:
+    """Resolve each group's world transform, composing parent rotations."""
+    resolved: dict[str, np.ndarray] = {}
+
+    def resolve(name: str) -> np.ndarray:
+        if name in resolved:
+            return resolved[name]
+        if name not in JOINTS:
+            resolved[name] = np.eye(4)
+            return resolved[name]
+        parent, (px, py, pt) = JOINTS[name]
+        pivot = np.array([px * h, py * h, _f(pt, h)])
+        rx, ry, rz = pose.get(name, (0.0, 0.0, 0.0))
+        local = np.eye(4)
+        for angle, axis in ((rx, [1, 0, 0]), (ry, [0, 1, 0]), (rz, [0, 0, 1])):
+            if angle:
+                local = trimesh.transformations.rotation_matrix(
+                    math.radians(angle), axis, pivot
+                ) @ local
+        resolved[name] = resolve(parent) @ local
+        return resolved[name]
+
+    for name in GROUP_ORDER:
+        resolve(name)
+    return resolved
+
+
+def build_character(
+    height: float = 130.0, with_base: bool = True, pose: dict | None = None
+) -> trimesh.Trimesh:
+    groups = build_groups(height, with_base)
+    if pose:
+        transforms = _joint_transforms(pose, height)
+        for name, meshes in groups.items():
+            T = transforms.get(name)
+            if T is not None and not np.allclose(T, np.eye(4)):
+                for m in meshes:
+                    m.apply_transform(T)
+
+    parts = [m for meshes in groups.values() for m in meshes]
 
     # The boolean union already returns a clean manifold; further cleanup
     # passes only re-weld vertices and punch holes in it, so leave it alone.
@@ -382,20 +453,64 @@ def build_character(height: float = 130.0, with_base: bool = True) -> trimesh.Tr
     return mesh
 
 
+def parse_pose(spec: str) -> dict:
+    """``head=0,0,20 arm_fore_left=-40,0,0`` -> {group: (rx, ry, rz)} in degrees."""
+    pose: dict[str, tuple] = {}
+    for item in spec.replace(",", " ").replace(";", " ").split():
+        name, _, values = item.partition("=")
+        if not name or not values:
+            continue
+        if name not in JOINTS:
+            raise SystemExit(f"unknown joint {name!r}; choose from {', '.join(JOINTS)}")
+        angles = [float(v) for v in values.split("/")]
+        angles += [0.0] * (3 - len(angles))
+        pose[name] = tuple(angles[:3])
+    return pose
+
+
+def export_parts(directory: str, height: float, with_base: bool, pose: dict | None) -> None:
+    """Write one STL per joint group, for printing or posing the pieces."""
+    groups = build_groups(height, with_base)
+    if pose:
+        transforms = _joint_transforms(pose, height)
+        for name, meshes in groups.items():
+            T = transforms.get(name)
+            if T is not None and not np.allclose(T, np.eye(4)):
+                for m in meshes:
+                    m.apply_transform(T)
+
+    os.makedirs(directory, exist_ok=True)
+    for name, meshes in groups.items():
+        piece = union(meshes) if len(meshes) > 1 else meshes[0]
+        path = os.path.join(directory, f"{name}.stl")
+        piece.export(path)
+        print(f"  {name:18s} {len(piece.faces):6,} tris  watertight={piece.is_watertight}")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description="Generate the Masoud character mesh.")
     ap.add_argument("--height", type=float, default=130.0, help="total height in mm")
     ap.add_argument("--out", default="character/masoud.stl", help="output STL path")
     ap.add_argument("--no-base", action="store_true", help="skip the display base")
     ap.add_argument("--glb", help="also write a GLB copy to this path")
+    ap.add_argument(
+        "--pose",
+        default="",
+        help="joint rotations in degrees, e.g. 'head=0/0/20 arm_fore_left=-35/0/0'",
+    )
+    ap.add_argument("--parts", help="also write one STL per body part into this directory")
     args = ap.parse_args()
 
-    mesh = build_character(args.height, with_base=not args.no_base)
+    pose = parse_pose(args.pose) if args.pose else None
+    mesh = build_character(args.height, with_base=not args.no_base, pose=pose)
 
     os.makedirs(os.path.dirname(os.path.abspath(args.out)), exist_ok=True)
     mesh.export(args.out)
     if args.glb:
         mesh.export(args.glb)
+    if args.parts:
+        print(f"parts      {args.parts}")
+        export_parts(args.parts, args.height, not args.no_base, pose)
 
     size = mesh.bounds[1] - mesh.bounds[0]
     print(f"wrote      {args.out}")

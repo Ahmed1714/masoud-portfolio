@@ -41,6 +41,42 @@ python3 character/generate_model.py --no-base          # drop the display base
 python3 character/generate_model.py --glb out.glb      # also write a GLB
 ```
 
+## Parts and posing
+
+STL stores triangles only — no parts, no bones — so the shipped `masoud.stl` is
+one fused solid. The generator keeps the body split internally, though, so you
+can get separate pieces or a different pose out of it.
+
+```bash
+# one watertight STL per body part, for multi-colour printing or assembly
+python3 character/generate_model.py --parts character/parts
+
+# rotate joints (degrees, rx/ry/rz) and fuse the result back into one model
+python3 character/generate_model.py \
+    --pose "head=0/0/18 arm_fore_left=-45/0/10 leg_right=8/0/0" \
+    --out character/masoud_posed.stl
+```
+
+Joints, each carrying its children: `head`, `arm_upper_left`, `arm_fore_left`,
+`arm_upper_right`, `arm_fore_right`, `leg_left`, `foot_left`, `leg_right`,
+`foot_right`. Rotating a leg lifts that foot off the base, so re-ground the
+model in the slicer or add a matching `foot_*` rotation.
+
+For real posing and animation — bones, weights, smooth deformation at the
+joints — you want a rigged GLB rather than STL. That is the AI reconstruction
+path noted below, which supports rigging directly.
+
+## Likeness
+
+This is a parametric sculpt: the proportions, pose and silhouette come from the
+model sheet, but the face is built from primitives, so it reads as the character
+rather than reproducing the render's exact features. Beard, hair strands, shirt
+folds, eye and mouth detail are not in it.
+
+A photo-accurate version needs image-to-3D reconstruction from the turnaround in
+`refs/` (Higgsfield `multi_image_to_3d`, optionally with texturing and rigging).
+The inputs are already uploaded; the job needs credits on the workspace to run.
+
 ## Printing notes
 
 - Print upright, on the base. No supports needed except light ones under the
