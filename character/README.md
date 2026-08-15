@@ -66,16 +66,32 @@ For real posing and animation — bones, weights, smooth deformation at the
 joints — you want a rigged GLB rather than STL. That is the AI reconstruction
 path noted below, which supports rigging directly.
 
-## Likeness
+## Two versions
 
-This is a parametric sculpt: the proportions, pose and silhouette come from the
-model sheet, but the face is built from primitives, so it reads as the character
-rather than reproducing the render's exact features. Beard, hair strands, shirt
-folds, eye and mouth detail are not in it.
+**Parametric sculpt** (this folder). The proportions, pose and silhouette come
+from the model sheet, but the face is built from primitives, so it reads as the
+character rather than reproducing the render's exact features. No beard, hair
+strands or shirt folds. Fully reproducible from `generate_model.py`.
 
-A photo-accurate version needs image-to-3D reconstruction from the turnaround in
-`refs/` (Higgsfield `multi_image_to_3d`, optionally with texturing and rigging).
-The inputs are already uploaded; the job needs credits on the workspace to run.
+**AI reconstruction** (textured + rigged). Built from the three views in `refs/`
+with Higgsfield `multi_image_to_3d` (35 credits), which reproduces the face,
+clothing and colours. Because the generated assets live on Higgsfield storage,
+which this repo's build environment cannot reach, they are linked rather than
+committed:
+
+- Bundle (GLB + STL + parts + texture):
+  <https://d2ol7oe51mr4n9.cloudfront.net/user_2xhkOVQnFmFjZSspDkDWygRGWsG/70384475-172d-4290-94e8-2e4a7da2bdfe.zip>
+- Rigged GLB on its own:
+  <https://d8j0ntlcm91z4.cloudfront.net/user_2xhkOVQnFmFjZSspDkDWygRGWsG/hf_20260815_202819_2da63fd8-c2fe-4dc4-b3d0-afa2e1c3a7c2.glb>
+
+| | Parametric | AI reconstruction |
+| --- | --- | --- |
+| Triangles | 87,376 | 31,132 |
+| Colour | none (STL) | baked PBR texture |
+| Rig | joint groups in the script | 24-joint humanoid skeleton + 1 clip |
+| Separate parts | 11 (`--parts`) | 6, split by bone weight, each watertight |
+| Watertight | yes | yes |
+| Reproducible | yes, from source | no, one-off generation |
 
 ## Printing notes
 
