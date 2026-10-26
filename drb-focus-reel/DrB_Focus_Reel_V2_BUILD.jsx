@@ -589,6 +589,49 @@
         [8.85, "arrow 1"], [9.35, "arrow 2"], [9.85, "arrow 3"], [11.5, "WHIP → end card"]];
     for (var m = 0; m < mk.length; m++) { main.markerProperty.setValueAtTime(mk[m][0], new MarkerValue(mk[m][1])); }
 
+    // ---------------------------------------------------------- OUTRO
+    // Finds the client outro automatically: any video/image with "outro" in its name, in this
+    // folder, an "outro" subfolder, or the parent project folders. Otherwise asks for the file.
+    function findOutro() {
+        var exts = /\.(mp4|mov|avi|mxf|m4v|webm|png|jpg|psd|aep)$/i;
+        var dirs = [ROOT, new Folder(ROOT.fsName + "/outro"), ROOT.parent, ROOT.parent ? ROOT.parent.parent : null];
+        for (var i = 0; i < dirs.length; i++) {
+            var d = dirs[i];
+            if (!d || !d.exists) { continue; }
+            var files = d.getFiles();
+            for (var j = 0; j < files.length; j++) {
+                if (files[j] instanceof File && /outro/i.test(files[j].name) && exts.test(files[j].name)) { return files[j]; }
+            }
+        }
+        return File.openDialog("Select the OUTRO file (Cancel = no outro)");
+    }
+    var outroFile = findOutro();
+    if (outroFile) {
+        var XF = 0.3;                                    // soft cross-dissolve into the outro
+        var outroItem = app.project.importFile(new ImportOptions(outroFile));
+        outroItem.parentFolder = fAssets;
+        var oDur = (outroItem.duration && outroItem.duration > 0) ? outroItem.duration : 3;
+        main.duration = DUR - XF + oDur;
+        main.workAreaStart = 0;
+        main.workAreaDuration = main.duration;
+        var ol = main.layers.add(outroItem);
+        ol.name = "OUTRO — " + outroFile.name;
+        ol.startTime = DUR - XF;
+        if (!(outroItem.duration > 0)) { ol.outPoint = main.duration; }
+        var ow = outroItem.width, oh = outroItem.height;
+        if (ow && oh && (ow !== W || oh !== H)) {
+            var fit = Math.max(W / ow, H / oh) * 100;      // fill the 9:16 frame
+            ol.property("ADBE Transform Group").property("ADBE Scale").setValue([fit, fit, 100]);
+        }
+        keys(ol.property("ADBE Transform Group").property("ADBE Opacity"), [[DUR - XF, 0], [DUR, 100]]);
+        // dip the reel music under the outro's own audio
+        try {
+            var lv = mus.property("ADBE Audio Group").property("ADBE Audio Levels");
+            keys(lv, [[DUR - 0.6, [0, 0]], [DUR + 0.2, [-48, -48]]]);
+        } catch (e) {}
+        main.markerProperty.setValueAtTime(DUR - XF, new MarkerValue("OUTRO"));
+    }
+
     var rq = proj.renderQueue.items.add(main);
     var om = rq.outputModule(1);
     try { om.applyTemplate("H.264 - Match Render Settings - 15 Mbps"); } catch (e) {}
