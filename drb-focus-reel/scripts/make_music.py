@@ -2,11 +2,15 @@
 Hits are locked to the edit: 5.6s product reveal, 9.6/10.1/10.6s arrows, 13.2s logo.
 """
 from pathlib import Path
+import sys
 import wave
 import numpy as np
 
 SR = 48000
 DUR = 16.5
+# optional tail (s) so the score keeps ringing under the client outro: make_music*.py 4.73
+TAIL = float(sys.argv[1]) if len(sys.argv) > 1 else 0.0
+DUR += TAIL
 N = int(SR * DUR)
 t = np.arange(N) / SR
 rng = np.random.default_rng(7)
@@ -105,7 +109,7 @@ def reverb(x, seed):
     return np.fft.irfft(np.fft.rfft(x, n) * np.fft.rfft(ir, n), n)[:N]
 L, R = L + 0.35 * reverb(L, 1), R + 0.35 * reverb(R, 2)
 
-fade = np.clip((DUR - t) / 1.2, 0, 1)
+fade = np.clip((DUR - t) / (1.2 + TAIL * 0.4), 0, 1)
 mix = np.stack([L, R], 1) * fade[:, None]
 mix = np.tanh(mix / np.abs(mix).max() * 1.4) * 0.89
 out = Path(__file__).resolve().parent.parent / "audio" / "drb_focus_score.wav"

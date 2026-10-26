@@ -594,7 +594,7 @@
     // folder, an "outro" subfolder, or the parent project folders. Otherwise asks for the file.
     function findOutro() {
         var exts = /\.(mp4|mov|avi|mxf|m4v|webm|png|jpg|psd|aep)$/i;
-        var dirs = [ROOT, new Folder(ROOT.fsName + "/outro"), ROOT.parent, ROOT.parent ? ROOT.parent.parent : null];
+        var dirs = [new Folder(ROOT.fsName + "/assets"), ROOT, new Folder(ROOT.fsName + "/outro"), ROOT.parent, ROOT.parent ? ROOT.parent.parent : null];
         for (var i = 0; i < dirs.length; i++) {
             var d = dirs[i];
             if (!d || !d.exists) { continue; }
@@ -624,10 +624,11 @@
             ol.property("ADBE Transform Group").property("ADBE Scale").setValue([fit, fit, 100]);
         }
         keys(ol.property("ADBE Transform Group").property("ADBE Opacity"), [[DUR - XF, 0], [DUR, 100]]);
-        // dip the reel music under the outro's own audio
+        // the score file already carries a tail that rings out under the outro; just make sure it ends clean
         try {
+            mus.outPoint = Math.min(main.duration, mus.startTime + music.duration);
             var lv = mus.property("ADBE Audio Group").property("ADBE Audio Levels");
-            keys(lv, [[DUR - 0.6, [0, 0]], [DUR + 0.2, [-48, -48]]]);
+            keys(lv, [[main.duration - 0.4, [0, 0]], [main.duration, [-48, -48]]]);
         } catch (e) {}
         main.markerProperty.setValueAtTime(DUR - XF, new MarkerValue("OUTRO"));
     }

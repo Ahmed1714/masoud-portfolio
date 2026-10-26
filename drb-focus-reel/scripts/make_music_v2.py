@@ -1,10 +1,14 @@
 """Original 16s score for Option 2 (120 BPM, upbeat/premium). Whooshes on every cut,
 pops on the doodles/labels, chimes on the arrows, impact on the end card."""
 from pathlib import Path
+import sys
 import wave
 import numpy as np
 
 SR, DUR = 48000, 16.0
+# optional tail (s) so the score keeps ringing under the client outro: make_music*.py 4.73
+TAIL = float(sys.argv[1]) if len(sys.argv) > 1 else 0.0
+DUR += TAIL
 N = int(SR * DUR)
 t = np.arange(N) / SR
 rng = np.random.default_rng(9)
@@ -111,7 +115,7 @@ def rev(x, seed):
     n = 1 << int(np.ceil(np.log2(N + ir_len)))
     return np.fft.irfft(np.fft.rfft(x, n) * np.fft.rfft(ir, n), n)[:N]
 L, R = L + 0.25 * rev(L, 1), R + 0.25 * rev(R, 2)
-fade = np.clip((DUR - t) / 1.0, 0, 1)
+fade = np.clip((DUR - t) / (1.0 + TAIL * 0.4), 0, 1)
 mix = np.stack([L, R], 1) * fade[:, None]
 mix = np.tanh(mix / np.abs(mix).max() * 1.6) * 0.9
 out = Path(__file__).resolve().parent.parent / "audio" / "drb_focus_score_v2.wav"
