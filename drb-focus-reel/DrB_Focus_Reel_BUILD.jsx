@@ -220,7 +220,9 @@
     var notebook = importFile("assets/scene_notebook.png", fAssets);
     var pack = importFile("assets/focus_pack.png", fAssets);
     var logo = importFile("assets/drb_logo_gold.png", fAssets);
-    var music = importFile("audio/drb_focus_score.wav", fAssets);
+    // music and sound effects on separate layers (stems sum to audio/drb_focus_score.wav)
+    var music = importFile("audio/drb_focus_score_MUSIC.wav", fAssets);
+    var sfx = importFile("audio/drb_focus_score_SFX.wav", fAssets);
 
     function newComp(name, folder) {
         var c = proj.items.addComp(name, W, H, 1, DUR, FPS);
@@ -441,8 +443,12 @@
     keys(tr(fadeIn, "ADBE Opacity"), [[0, 100], [0.35, 0]]);
 
     var mus = main.layers.add(music);
-    mus.name = "Music — drb_focus_score.wav";
+    mus.name = "MUSIC — drb_focus_score_MUSIC.wav";
     mus.moveToEnd();
+    var sfxL = main.layers.add(sfx);
+    sfxL.name = "SFX — drb_focus_score_SFX.wav";
+    sfxL.moveToEnd();
+    var audioLayers = [mus, sfxL];
 
     // markers for the edit beats
     var mk = [[0, "HOOK — been losing focus lately?"], [3.3, "that's okay, we got you covered"],
@@ -489,9 +495,11 @@
         keys(ol.property("ADBE Transform Group").property("ADBE Opacity"), [[DUR - XF, 0], [DUR, 100]]);
         // the score file already carries a tail that rings out under the outro; just make sure it ends clean
         try {
-            mus.outPoint = Math.min(main.duration, mus.startTime + music.duration);
-            var lv = mus.property("ADBE Audio Group").property("ADBE Audio Levels");
-            keys(lv, [[main.duration - 0.4, [0, 0]], [main.duration, [-48, -48]]]);
+            for (var ai = 0; ai < audioLayers.length; ai++) {
+                var al = audioLayers[ai];
+                al.outPoint = Math.min(main.duration, al.startTime + al.source.duration);
+                keys(al.property("ADBE Audio Group").property("ADBE Audio Levels"), [[main.duration - 0.4, [0, 0]], [main.duration, [-48, -48]]]);
+            }
         } catch (e) {}
         main.markerProperty.setValueAtTime(DUR - XF, new MarkerValue("OUTRO"));
     }

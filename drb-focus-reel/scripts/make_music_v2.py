@@ -12,7 +12,9 @@ DUR += TAIL
 N = int(SR * DUR)
 t = np.arange(N) / SR
 rng = np.random.default_rng(9)
-L = np.zeros(N); R = np.zeros(N)
+L = np.zeros(N); R = np.zeros(N)            # music bus
+FXL = np.zeros(N); FXR = np.zeros(N)        # sound-effects bus
+BUS = "music"
 BEAT = 0.5
 CUTS = [2.5, 5.0, 8.0, 11.5]
 
@@ -33,7 +35,10 @@ def lp1(x, c):
     return y
 
 def add(s, pan=0.0, g=1.0):
-    global L, R
+    global L, R, FXL, FXR
+    if BUS == "sfx":
+        FXL += s * g * np.sqrt(0.5 * (1 - pan)); FXR += s * g * np.sqrt(0.5 * (1 + pan))
+        return
     L += s * g * np.sqrt(0.5 * (1 - pan)); R += s * g * np.sqrt(0.5 * (1 + pan))
 
 groove = (t >= 2.5) & (t < 11.5)
@@ -80,6 +85,7 @@ for k, st in enumerate(np.arange(0.0, 15.0, BEAT / 4)):
     g = 0.045 if st < 2.5 else (0.06 if st < 11.5 else 0.03)
     add((np.sin(2 * np.pi * hz(m) * t) + 0.3 * np.sin(4 * np.pi * hz(m) * t)) * e * g, pan=0.4 if k % 2 else -0.4)
 
+BUS = "sfx"
 # whooshes into every cut
 for c in CUTS:
     a, b = c - 0.45, c + 0.15
@@ -114,12 +120,27 @@ def rev(x, seed):
     ir /= np.abs(ir).sum() / 5
     n = 1 << int(np.ceil(np.log2(N + ir_len)))
     return np.fft.irfft(np.fft.rfft(x, n) * np.fft.rfft(ir, n), n)[:N]
-L, R = L + 0.25 * rev(L, 1), R + 0.25 * rev(R, 2)
+MUS, FX = [L, R], [FXL, FXR]
+for bus in (MUS, FX):
+    bus[0], bus[1] = bus[0] + 0.25 * rev(bus[0], 1), bus[1] + 0.25 * rev(bus[1], 2)
+
 fade = np.clip((DUR - t) / (1.0 + TAIL * 0.4), 0, 1)
-mix = np.stack([L, R], 1) * fade[:, None]
-mix = np.tanh(mix / np.abs(mix).max() * 1.6) * 0.9
-out = Path(__file__).resolve().parent.parent / "audio" / "drb_focus_score_v2.wav"
-with wave.open(str(out), "wb") as w:
-    w.setnchannels(2); w.setsampwidth(2); w.setframerate(SR)
-    w.writeframes((mix * 32767).astype("<i2").tobytes())
-print("wrote", out)
+mus = np.stack(MUS, 1) * fade[:, None]
+fx = np.stack(FX, 1) * fade[:, None]
+full = mus + fx
+g = 1.6 / np.abs(full).max()
+mix = np.tanh(full * g) * 0.9
+# per-sample limiter gain, applied to both stems so music + sfx == full mix exactly
+safe = np.where(np.abs(full) < 1e-9, 1e-9, full)
+k = np.where(np.abs(full) < 1e-9, g * 0.9, mix / safe)
+
+def write(name, data):
+    out = Path(__file__).resolve().parent.parent / "audio" / name
+    with wave.open(str(out), "wb") as w:
+        w.setnchannels(2); w.setsampwidth(2); w.setframerate(SR)
+        w.writeframes((np.clip(data, -1, 1) * 32767).astype("<i2").tobytes())
+    print("wrote", out)
+
+write("drb_focus_score_v2.wav", mix)
+write("drb_focus_score_v2_MUSIC.wav", mus * k)
+write("drb_focus_score_v2_SFX.wav", fx * k)
