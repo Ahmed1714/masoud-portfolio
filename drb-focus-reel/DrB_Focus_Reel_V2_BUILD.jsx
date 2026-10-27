@@ -59,57 +59,47 @@
         return b.property("ADBE Gaussian Blur 2-0001");
     }
     function setByName(e, n, v) { try { e.property(n).setValue(v); } catch (x) {} }
-    function centreAnchor(l) {
-        var r = l.sourceRectAtTime(0, false);
-        tr(l, "ADBE Anchor Point").setValue([r.left + r.width / 2, r.top + r.height / 2]);
-        return r;
-    }
 
-    // Text layers: addText can fail (Unknown BIB Error / CT) when AE's Text Engine is set to
-    // "South Asian and Middle Eastern". Try several ways, then explain the fix instead of crashing.
-    function makeText(comp, str) {
-        var l = null;
-        try { l = comp.layers.addText(new TextDocument(str)); } catch (e) { l = null; }
-        if (!l) { try { l = comp.layers.addText(str); } catch (e2) { l = null; } }
-        if (!l) {
-            try {
-                l = comp.layers.addText();
-                l.property("ADBE Text Properties").property("ADBE Text Document").setValue(new TextDocument(str));
-            } catch (e3) { l = null; }
-        }
-        if (!l) {
-            throw new Error("After Effects couldn't create a text layer.\n\n" +
-                "Fix: Edit > Preferences > Type > Text Engine = \"Latin and East Asian\", " +
-                "restart After Effects, then run this script again.");
-        }
-        return l;
+    // ---- Text as PNG images (rendered in Montserrat by scripts/make_text_pngs.py).
+    // No live text layers: avoids AE's "Unknown BIB Error ... CT" on machines whose
+    // Text Engine / language setup breaks scripted text, and no font install is needed.
+    var TEXT_FOLDER = null, TEXT_CACHE = {};
+    function hashStr(s) {
+        var h = 5381;
+        for (var i = 0; i < s.length; i++) { h = ((h << 5) + h + s.charCodeAt(i)) | 0; }
+        return (h >>> 0).toString(16);
     }
-    function textDoc(st, str) {
-        var td = null;
-        try { td = st.value; } catch (e) { td = null; }
-        if (!td) { td = new TextDocument(str); }
-        try { td.resetCharStyle(); } catch (e2) {}
-        return td;
+    function colorKey(c) { return (c[0] === GOLD[0] && c[1] === GOLD[1] && c[2] === GOLD[2]) ? "gold" : "cream"; }
+    function textPad(size) { return Math.round(size * 0.6); }
+    // segs: [[text, font, size, "gold"|"cream"], ...]
+    function textItem(segs, tracking, outline) {
+        tracking = tracking || 0; outline = outline || 0;
+        var parts = [];
+        for (var i = 0; i < segs.length; i++) { parts.push(segs[i].join("|")); }
+        var spec = parts.join("~") + "#" + tracking + "#" + outline;
+        var slug = segs[0][0].replace(/[^A-Za-z0-9]+/g, "_").replace(/^_+|_+$/g, "").substring(0, 24);
+        var name = "T_" + slug + "_" + hashStr(spec) + ".png";
+        if (typeof __TEXT_SPECS !== "undefined") { __TEXT_SPECS.push({ name: name, segs: segs, tracking: tracking, outline: outline }); }
+        if (TEXT_CACHE[name]) { return TEXT_CACHE[name]; }
+        var file = new File(ROOT.fsName + "/text/" + name);
+        if (!file.exists) { throw new Error("Missing text image: text/" + name + "\nKeep the 'text' folder next to this script."); }
+        var it = app.project.importFile(new ImportOptions(file));
+        if (!TEXT_FOLDER) {
+            TEXT_FOLDER = app.project.items.addFolder("Text (PNG)");
+            try { TEXT_FOLDER.parentFolder = fAssets; } catch (e) {}
+        }
+        it.parentFolder = TEXT_FOLDER;
+        TEXT_CACHE[name] = it;
+        return it;
     }
+    // visible text width (image minus its transparent padding)
+    function visW(layer, size) { return layer.source.width - 2 * textPad(size); }
 
-    // text layer positioned by its visual centre
+    // image text positioned by its visual centre
     function txt(comp, str, font, size, color, x, y, opts) {
         opts = opts || {};
-        var l = makeText(comp, str);
-        var st = l.property("ADBE Text Properties").property("ADBE Text Document");
-        var td = textDoc(st, str);
-        td.font = font; td.fontSize = size;
-        td.justification = ParagraphJustification.CENTER_JUSTIFY;
-        td.tracking = opts.tracking || 0;
-        if (opts.outline) {
-            td.applyFill = false; td.applyStroke = true;
-            td.strokeColor = color; td.strokeWidth = opts.outline;
-        } else {
-            td.applyFill = true; td.fillColor = color; td.applyStroke = false;
-        }
-        st.setValue(td);
+        var l = comp.layers.add(textItem([[str, font, size, colorKey(color)]], opts.tracking || 0, opts.outline || 0));
         l.name = str;
-        centreAnchor(l);
         tr(l, "ADBE Position").setValue([x, y]);
         l.motionBlur = true;
         return l;
@@ -268,20 +258,6 @@
     }
 
     // ------------------------------------------------------------ project
-    // warn early if Montserrat isn't installed (AE 24+ exposes app.fonts)
-    (function () {
-        var need = ["Montserrat-Bold", "Montserrat-ExtraBold", "Montserrat-Black", "Montserrat-ExtraBoldItalic"], missing = [];
-        try {
-            for (var i = 0; i < need.length; i++) {
-                var r = app.fonts.getFontsByPostScriptName(need[i]);
-                if (!r || !r.length) { missing.push(need[i]); }
-            }
-        } catch (e) { return; }
-        if (missing.length && !confirm("Missing fonts:\n" + missing.join("\n") +
-            "\n\nInstall them from the fonts folder (right-click > Install for all users) and restart AE.\nContinue anyway?")) {
-            throw new Error("Cancelled: install the Montserrat fonts first.");
-        }
-    })();
     app.beginUndoGroup("Build Dr B Focus Reel V2");
     var proj = app.project;
     var fRoot = proj.items.addFolder("DrB_Focus_Reel_V2");
@@ -512,11 +488,11 @@
         var ls2 = [], total = 0, gap = 18;
         for (var i = 0; i < words.length; i++) {
             var l = txt(s5, words[i][0], "Montserrat-Bold", 58, CREAM, 0, 560);
-            var w = l.sourceRectAtTime(0, false).width;
+            var w = visW(l, 58);
             ls2.push([l, w]); total += w + gap;
         }
         var bL = txt(s5, "B", "Montserrat-Black", 84, GOLD, 0, 552);
-        var bw = bL.sourceRectAtTime(0, false).width;
+        var bw = visW(bL, 84);
         total += bw;
         var x = (W - total) / 2;
         for (var k = 0; k < ls2.length; k++) {

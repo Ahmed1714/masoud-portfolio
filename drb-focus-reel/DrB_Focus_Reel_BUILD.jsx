@@ -53,47 +53,50 @@
         try { effect.property(name).setValue(value); } catch (e) {}
     }
 
-    // Text layers: addText can fail (Unknown BIB Error / CT) when AE's Text Engine is set to
-    // "South Asian and Middle Eastern". Try several ways, then explain the fix instead of crashing.
-    function makeText(comp, str) {
-        var l = null;
-        try { l = comp.layers.addText(new TextDocument(str)); } catch (e) { l = null; }
-        if (!l) { try { l = comp.layers.addText(str); } catch (e2) { l = null; } }
-        if (!l) {
-            try {
-                l = comp.layers.addText();
-                l.property("ADBE Text Properties").property("ADBE Text Document").setValue(new TextDocument(str));
-            } catch (e3) { l = null; }
-        }
-        if (!l) {
-            throw new Error("After Effects couldn't create a text layer.\n\n" +
-                "Fix: Edit > Preferences > Type > Text Engine = \"Latin and East Asian\", " +
-                "restart After Effects, then run this script again.");
-        }
-        return l;
+    // ---- Text as PNG images (rendered in Montserrat by scripts/make_text_pngs.py).
+    // No live text layers: avoids AE's "Unknown BIB Error ... CT" on machines whose
+    // Text Engine / language setup breaks scripted text, and no font install is needed.
+    var TEXT_FOLDER = null, TEXT_CACHE = {};
+    function hashStr(s) {
+        var h = 5381;
+        for (var i = 0; i < s.length; i++) { h = ((h << 5) + h + s.charCodeAt(i)) | 0; }
+        return (h >>> 0).toString(16);
     }
-    function textDoc(st, str) {
-        var td = null;
-        try { td = st.value; } catch (e) { td = null; }
-        if (!td) { td = new TextDocument(str); }
-        try { td.resetCharStyle(); } catch (e2) {}
-        return td;
+    function colorKey(c) { return (c[0] === GOLD[0] && c[1] === GOLD[1] && c[2] === GOLD[2]) ? "gold" : "cream"; }
+    function textPad(size) { return Math.round(size * 0.6); }
+    // segs: [[text, font, size, "gold"|"cream"], ...]
+    function textItem(segs, tracking, outline) {
+        tracking = tracking || 0; outline = outline || 0;
+        var parts = [];
+        for (var i = 0; i < segs.length; i++) { parts.push(segs[i].join("|")); }
+        var spec = parts.join("~") + "#" + tracking + "#" + outline;
+        var slug = segs[0][0].replace(/[^A-Za-z0-9]+/g, "_").replace(/^_+|_+$/g, "").substring(0, 24);
+        var name = "T_" + slug + "_" + hashStr(spec) + ".png";
+        if (typeof __TEXT_SPECS !== "undefined") { __TEXT_SPECS.push({ name: name, segs: segs, tracking: tracking, outline: outline }); }
+        if (TEXT_CACHE[name]) { return TEXT_CACHE[name]; }
+        var file = new File(ROOT.fsName + "/text/" + name);
+        if (!file.exists) { throw new Error("Missing text image: text/" + name + "\nKeep the 'text' folder next to this script."); }
+        var it = app.project.importFile(new ImportOptions(file));
+        if (!TEXT_FOLDER) {
+            TEXT_FOLDER = app.project.items.addFolder("Text (PNG)");
+            try { TEXT_FOLDER.parentFolder = fAssets; } catch (e) {}
+        }
+        it.parentFolder = TEXT_FOLDER;
+        TEXT_CACHE[name] = it;
+        return it;
     }
+    // visible text width (image minus its transparent padding)
+    function visW(layer, size) { return layer.source.width - 2 * textPad(size); }
 
-    function textLayer(comp, str, font, size, color, tracking, x, y, justify) {
-        var l = makeText(comp, str);
-        var st = l.property("ADBE Text Properties").property("ADBE Text Document");
-        var td = textDoc(st, str);
-        td.font = font;
-        td.fontSize = size;
-        td.applyFill = true;
-        td.fillColor = color;
-        td.applyStroke = false;
-        td.tracking = tracking || 0;
-        td.justification = justify || ParagraphJustification.CENTER_JUSTIFY;
-        st.setValue(td);
-        tr(l, "ADBE Position").setValue([x, y]);
+    // x/y follow the old live-text convention (baseline; x = left edge when LEFT)
+    function textLayer(comp, str, font, size, color, tracking, x, y, left, segs) {
+        var maxSize = size;
+        if (segs) { for (var i = 0; i < segs.length; i++) { maxSize = Math.max(maxSize, segs[i][2]); } }
+        var item = textItem(segs || [[str, font, size, colorKey(color)]], tracking, 0);
+        var l = comp.layers.add(item);
         l.name = str;
+        var cx = left ? x - textPad(maxSize) + item.width / 2 : x;
+        tr(l, "ADBE Position").setValue([cx, y - size * 0.34]);
         return l;
     }
 
@@ -206,20 +209,6 @@
     }
 
     // ------------------------------------------------------------ project
-    // warn early if Montserrat isn't installed (AE 24+ exposes app.fonts)
-    (function () {
-        var need = ["Montserrat-Light", "Montserrat-Medium", "Montserrat-SemiBold", "Montserrat-Bold"], missing = [];
-        try {
-            for (var i = 0; i < need.length; i++) {
-                var r = app.fonts.getFontsByPostScriptName(need[i]);
-                if (!r || !r.length) { missing.push(need[i]); }
-            }
-        } catch (e) { return; }
-        if (missing.length && !confirm("Missing fonts:\n" + missing.join("\n") +
-            "\n\nInstall them from the fonts folder (right-click > Install for all users) and restart AE.\nContinue anyway?")) {
-            throw new Error("Cancelled: install the Montserrat fonts first.");
-        }
-    })();
     app.beginUndoGroup("Build Dr B Focus Reel");
     if (!app.project) { app.newProject(); }
     var proj = app.project;
@@ -289,12 +278,12 @@
         textInOut(textLayer(hook, "been losing", "Montserrat-Light", 78, CREAM, 50, 540, 495), 0.25, 3.2);
 
         // "focus lately?" — two layers so "focus" can sit out of focus until the rack
-        var lFocus = textLayer(hook, "focus", "Montserrat-Bold", 104, GOLD, 40, 0, 625, ParagraphJustification.LEFT_JUSTIFY);
-        var lLately = textLayer(hook, " lately?", "Montserrat-Light", 78, CREAM, 50, 0, 625, ParagraphJustification.LEFT_JUSTIFY);
-        var w1 = lFocus.sourceRectAtTime(0, false).width, w2 = lLately.sourceRectAtTime(0, false).width;
-        var x0 = (W - (w1 + w2 + 12)) / 2;
-        tr(lFocus, "ADBE Position").setValue([x0, 625]);
-        tr(lLately, "ADBE Position").setValue([x0 + w1 + 12, 625]);
+        var lFocus = textLayer(hook, "focus", "Montserrat-Bold", 104, GOLD, 40, 540, 625);
+        var lLately = textLayer(hook, "lately?", "Montserrat-Light", 78, CREAM, 50, 540, 625);
+        var w1 = visW(lFocus, 104), w2 = visW(lLately, 78), gap = 24;
+        var x0 = (W - (w1 + w2 + gap)) / 2;
+        tr(lFocus, "ADBE Position").setValue([x0 + w1 / 2, 625 - 104 * 0.34]);
+        tr(lLately, "ADBE Position").setValue([x0 + w1 + gap + w2 / 2, 625 - 78 * 0.30]);
         textInOut(lLately, 0.55, 3.2);
         textInOut(lFocus, 0.55, 3.2);
         var fb = lFocus.property("ADBE Effect Parade").property(1).property("ADBE Gaussian Blur 2-0001");
@@ -341,9 +330,7 @@
         var name = textInOut(textLayer(prod, "Dr B's Focus", "Montserrat-SemiBold", 100, GOLD, 20, 540, 575), 6.35, 9.2, 25);
         lightSweep(name, 7.0, 8.0, 0, W, 540, 40);
         var tabs = textInOut(textLayer(prod, "CHOCOLATE TABS", "Montserrat-Medium", 50, CREAM, 280, 540, 1598), 6.6, 9.2, 25);
-        var anim = tabs.property("ADBE Text Properties").property("ADBE Text Animators").addProperty("ADBE Text Animator");
-        var trk = anim.property("ADBE Text Animator Properties").addProperty("ADBE Text Tracking Amount");
-        keys(trk, [[6.6, 300], [7.6, 0]]);  // letters settle in
+        keys(tr(tabs, "ADBE Scale"), [[6.6, [114, 114, 100]], [7.6, [100, 100, 100]]]);  // settles in
     })();
 
     // ---------------------------------------------------------- 03 BENEFITS  (9.2 – 13.2s)
@@ -358,9 +345,9 @@
             var y = 1330 + i * 165, t0 = items[i][1];
             var a = arrowLayer(ben, "Arrow " + (i + 1), 250, y, t0);
             keys(tr(a, "ADBE Opacity"), [[12.9, 100], [13.2, 0]]);
-            var w = textLayer(ben, items[i][0], "Montserrat-SemiBold", 74, CREAM, 10, 320, y + 26, ParagraphJustification.LEFT_JUSTIFY);
-            var pos = tr(w, "ADBE Position");
-            keys(pos, [[t0 + 0.1, [370, y + 26]], [t0 + 0.7, [320, y + 26]]]);
+            var w = textLayer(ben, items[i][0], "Montserrat-SemiBold", 74, CREAM, 10, 320, y + 26, true);
+            var pos = tr(w, "ADBE Position"), half = visW(w, 74) / 2, wy = y + 26 - 74 * 0.34;
+            keys(pos, [[t0 + 0.1, [370 + half, wy]], [t0 + 0.7, [320 + half, wy]]]);
             keys(tr(w, "ADBE Opacity"), [[t0 + 0.1, 0], [t0 + 0.6, 100], [12.9, 100], [13.2, 0]]);
             keys(blur(w), [[t0 + 0.1, 8], [t0 + 0.6, 0], [12.9, 0], [13.2, 12]]);
         }
@@ -407,20 +394,12 @@
         keys(ltrim.property("ADBE Vector Trim End"), [[13.9, 50], [14.5, 100]]);
         tr(line, "ADBE Position").setValue([540, 1090]);
 
-        var tag = textLayer(end, "the sharpest you can B", "Montserrat-Light", 60, CREAM, 80, 540, 1212);
-        // gold, bold "B" (AE 24.3+ character styling; older versions keep it cream)
-        try {
-            var stp = tag.property("ADBE Text Properties").property("ADBE Text Document");
-            var td = stp.value;
-            var r = td.characterRange(21, 22);
-            r.fillColor = GOLD; r.font = "Montserrat-Bold"; r.fontSize = 72;
-            stp.setValue(td);
-        } catch (e) {}
+        var tag = textLayer(end, "the sharpest you can B", "Montserrat-Light", 60, CREAM, 80, 540, 1212, false,
+            [["the sharpest you can ", "Montserrat-Light", 60, "cream"], ["B", "Montserrat-Bold", 72, "gold"]]);
         keys(tr(tag, "ADBE Opacity"), [[14.2, 0], [14.9, 100]]);
         keys(blur(tag), [[14.2, 8], [14.9, 0]]);
-        var an = tag.property("ADBE Text Properties").property("ADBE Text Animators").addProperty("ADBE Text Animator");
-        keys(an.property("ADBE Text Animator Properties").addProperty("ADBE Text Tracking Amount"), [[14.2, 350], [15.4, 0]]);
-        keys(tr(tag, "ADBE Position"), [[14.2, [540, 1232]], [14.9, [540, 1212]]]);
+        keys(tr(tag, "ADBE Scale"), [[14.2, [116, 116, 100]], [15.4, [100, 100, 100]]]);  // letters "settle"
+        keys(tr(tag, "ADBE Position"), [[14.2, [540, 1212]], [14.9, [540, 1192]]]);
     })();
 
     // ---------------------------------------------------------- MAIN
