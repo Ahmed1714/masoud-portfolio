@@ -53,11 +53,37 @@
         try { effect.property(name).setValue(value); } catch (e) {}
     }
 
+    // Text layers: addText can fail (Unknown BIB Error / CT) when AE's Text Engine is set to
+    // "South Asian and Middle Eastern". Try several ways, then explain the fix instead of crashing.
+    function makeText(comp, str) {
+        var l = null;
+        try { l = comp.layers.addText(new TextDocument(str)); } catch (e) { l = null; }
+        if (!l) { try { l = comp.layers.addText(str); } catch (e2) { l = null; } }
+        if (!l) {
+            try {
+                l = comp.layers.addText();
+                l.property("ADBE Text Properties").property("ADBE Text Document").setValue(new TextDocument(str));
+            } catch (e3) { l = null; }
+        }
+        if (!l) {
+            throw new Error("After Effects couldn't create a text layer.\n\n" +
+                "Fix: Edit > Preferences > Type > Text Engine = \"Latin and East Asian\", " +
+                "restart After Effects, then run this script again.");
+        }
+        return l;
+    }
+    function textDoc(st, str) {
+        var td = null;
+        try { td = st.value; } catch (e) { td = null; }
+        if (!td) { td = new TextDocument(str); }
+        try { td.resetCharStyle(); } catch (e2) {}
+        return td;
+    }
+
     function textLayer(comp, str, font, size, color, tracking, x, y, justify) {
-        var l = comp.layers.addText(str);
+        var l = makeText(comp, str);
         var st = l.property("ADBE Text Properties").property("ADBE Text Document");
-        var td = st.value;
-        td.resetCharStyle();
+        var td = textDoc(st, str);
         td.font = font;
         td.fontSize = size;
         td.applyFill = true;
@@ -180,6 +206,20 @@
     }
 
     // ------------------------------------------------------------ project
+    // warn early if Montserrat isn't installed (AE 24+ exposes app.fonts)
+    (function () {
+        var need = ["Montserrat-Light", "Montserrat-Medium", "Montserrat-SemiBold", "Montserrat-Bold"], missing = [];
+        try {
+            for (var i = 0; i < need.length; i++) {
+                var r = app.fonts.getFontsByPostScriptName(need[i]);
+                if (!r || !r.length) { missing.push(need[i]); }
+            }
+        } catch (e) { return; }
+        if (missing.length && !confirm("Missing fonts:\n" + missing.join("\n") +
+            "\n\nInstall them from the fonts folder (right-click > Install for all users) and restart AE.\nContinue anyway?")) {
+            throw new Error("Cancelled: install the Montserrat fonts first.");
+        }
+    })();
     app.beginUndoGroup("Build Dr B Focus Reel");
     if (!app.project) { app.newProject(); }
     var proj = app.project;
