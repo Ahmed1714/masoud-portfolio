@@ -13,6 +13,9 @@ export interface Settings {
     openaiModel: string;
     geminiKey: string;
     geminiModel: string;
+    /** Speech-to-text for long recordings (Claude has no audio input). */
+    transcriber: 'auto' | 'gemini' | 'openai';
+    openaiTranscribeModel: string;
   };
   notion: {
     token: string;
@@ -38,6 +41,8 @@ export const DEFAULT_SETTINGS: Settings = {
     openaiModel: 'gpt-5-mini',
     geminiKey: '',
     geminiModel: 'gemini-2.5-flash',
+    transcriber: 'auto',
+    openaiTranscribeModel: 'gpt-4o-transcribe',
   },
   notion: { token: '', parentPageId: '', autoSync: true, dbs: {} },
   quran: { khatmaDays: 30, fontSize: 26 },

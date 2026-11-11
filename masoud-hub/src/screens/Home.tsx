@@ -9,6 +9,7 @@ import { toArabicDigits } from '../lib/quran';
 import { useWird } from './Quran';
 import { TaskEditor, TaskRow } from './Tasks';
 import type { Task } from '../db';
+import { Icon, Rule, type IconName } from '../components/brand';
 
 function greeting() {
   const h = new Date().getHours();
@@ -26,13 +27,13 @@ function hijri() {
   }
 }
 
-const QUICK: { r: Route; ic: string; label: string }[] = [
-  { r: 'journal', ic: '📔', label: 'يومية' },
-  { r: 'expenses', ic: '💸', label: 'مصروف' },
-  { r: 'ideas', ic: '💡', label: 'فكرة' },
-  { r: 'azkar', ic: '📿', label: 'أذكار' },
-  { r: 'english', ic: '🇬🇧', label: 'إنجليزي' },
-  { r: 'content', ic: '🎬', label: 'محتوى' },
+const QUICK: { r: Route; ic: IconName; label: string }[] = [
+  { r: 'journal', ic: 'journal', label: 'يومية' },
+  { r: 'expenses', ic: 'wallet', label: 'مصروف' },
+  { r: 'ideas', ic: 'idea', label: 'فكرة' },
+  { r: 'azkar', ic: 'azkar', label: 'أذكار' },
+  { r: 'english', ic: 'english', label: 'إنجليزي' },
+  { r: 'content', ic: 'content', label: 'محتوى' },
 ];
 
 export function Home() {
@@ -63,17 +64,16 @@ export function Home() {
   return (
     <>
       <div className="hero">
-        <div className="hello">
-          {new Date().toLocaleDateString('ar-EG', { weekday: 'long', day: 'numeric', month: 'long' })} · {hijri()}
-        </div>
-        <div className="big">
+        <div className="eyebrow">{new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })} · Cairo</div>
+        <div className="big" style={{ marginTop: 8 }}>
           {greeting()} يا <em>{s.name}</em>
         </div>
+        <div className="hello" style={{ marginTop: 4 }}>{hijri()}</div>
       </div>
 
       <div className="grid2">
         <div className="card gold" style={{ marginBottom: 0 }} onClick={() => go('quran')}>
-          <div className="muted">📖 الورد</div>
+          <div className="muted row" style={{ gap: 6 }}><Icon name="quran" size={16} style={{ color: 'var(--gold)' }} /> الورد</div>
           <div style={{ fontSize: 20, fontWeight: 800 }}>
             {toArabicDigits(todayRead)}
             <span className="muted"> / {toArabicDigits(target)}</span>
@@ -83,7 +83,7 @@ export function Home() {
           </div>
         </div>
         <div className="card" style={{ marginBottom: 0 }} onClick={() => go('azkar')}>
-          <div className="muted">📿 الأذكار</div>
+          <div className="muted row" style={{ gap: 6 }}><Icon name="azkar" size={16} style={{ color: 'var(--teal)' }} /> الأذكار</div>
           <div className="row" style={{ gap: 6, marginTop: 6 }}>
             <span className={`tag ${azkarDone('morning') ? 'teal' : ''}`}>🌅 صباح {azkarDone('morning') ? '✓' : ''}</span>
             <span className={`tag ${azkarDone('evening') ? 'teal' : ''}`}>🌙 مساء {azkarDone('evening') ? '✓' : ''}</span>
@@ -92,7 +92,7 @@ export function Home() {
       </div>
 
       <div className="section-title">
-        <span>✅ مهام النهارده ({tasks.length})</span>
+        <span>Today · مهام النهارده ({tasks.length})</span>
         <button className="btn sm ghost" onClick={() => go('tasks')}>
           الكل ←
         </button>
@@ -107,7 +107,7 @@ export function Home() {
         + مهمة سريعة
       </button>
 
-      <div className="section-title">النهارده</div>
+      <div className="section-title"><span>Overview · نظرة سريعة</span></div>
       <div className="grid3">
         <div className="stat" onClick={() => go('expenses')}>
           <div className="v" style={{ fontSize: 16 }}>{fmtMoney(month ?? 0, s.currency)}</div>
@@ -123,11 +123,11 @@ export function Home() {
         </div>
       </div>
 
-      <div className="section-title">وصول سريع</div>
+      <div className="section-title"><span>Shortcuts · وصول سريع</span></div>
       <div className="tiles">
         {QUICK.map((q) => (
           <button key={q.r} className="tile" onClick={() => go(q.r)}>
-            <span className="ic">{q.ic}</span>
+            <span className="ic"><Icon name={q.ic} size={26} stroke={1.3} /></span>
             {q.label}
           </button>
         ))}
@@ -135,13 +135,18 @@ export function Home() {
 
       <div className="card" style={{ marginTop: 14 }} onClick={() => go('voice')}>
         <div className="row">
-          <div style={{ fontSize: 28 }}>🎙</div>
+          <div style={{ color: 'var(--gold)' }}><Icon name="mic" size={28} /></div>
           <div className="grow">
             <h3 style={{ margin: 0 }}>قول اللي في دماغك</h3>
-            <div className="muted">اتكلم وحوّله لبوست، رسالة، مهام أو يومية</div>
+            <div className="muted">سجّل من غير حد وحوّله لبوست، رسالة، مهام أو يومية</div>
           </div>
-          <span style={{ color: 'var(--gold)' }}>←</span>
+          <Icon name="back" size={18} style={{ color: 'var(--gold)', transform: 'scaleX(-1)' }} />
         </div>
+      </div>
+
+      <div style={{ textAlign: 'center', marginTop: 26 }}>
+        <Rule />
+        <div className="eyebrow" style={{ color: 'var(--white-dim)' }}>Masoud · Motion Graphics &amp; Animation</div>
       </div>
 
       {editing && <TaskEditor task={editing.id ? editing : undefined} onClose={() => setEditing(null)} />}

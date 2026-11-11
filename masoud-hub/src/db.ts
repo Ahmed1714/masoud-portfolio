@@ -86,6 +86,26 @@ export interface QuranLog {
   to: string;
 }
 
+export type RecStatus = 'recording' | 'pending' | 'transcribing' | 'done' | 'error';
+export interface Recording {
+  id: string;
+  createdAt: number;
+  duration: number; // seconds
+  status: RecStatus;
+  chunks: number;
+  text?: string;
+  error?: string;
+  lang: string;
+}
+export interface AudioChunk {
+  id: string;
+  recId: string;
+  idx: number;
+  blob: Blob;
+  mime: string;
+  text?: string;
+}
+
 export interface KV {
   key: string;
   value: unknown;
@@ -102,6 +122,8 @@ class HubDB extends Dexie {
   socialStats!: Table<SocialStat, string>;
   quranLog!: Table<QuranLog, string>;
   kv!: Table<KV, string>;
+  recordings!: Table<Recording, string>;
+  audioChunks!: Table<AudioChunk, string>;
 
   constructor() {
     super('masoud-hub');
@@ -116,6 +138,10 @@ class HubDB extends Dexie {
       socialStats: 'id, accountId, date',
       quranLog: 'id, date',
       kv: 'key',
+    });
+    this.version(2).stores({
+      recordings: 'id, createdAt, status',
+      audioChunks: 'id, recId, [recId+idx]',
     });
   }
 }

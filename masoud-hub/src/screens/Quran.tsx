@@ -252,7 +252,7 @@ export function Quran() {
         </div>
       </div>
 
-      <div className="section-title">الأجزاء</div>
+      <div className="section-title"><span>Juz · الأجزاء</span></div>
       <div className="chips">
         {JUZ_STARTS.map(([s, a], i) => (
           <button key={i} className="chip" onClick={() => (location.hash = `#/quran?s=${s}&a=${a}`)}>
@@ -261,7 +261,7 @@ export function Quran() {
         ))}
       </div>
 
-      <div className="section-title">السور</div>
+      <div className="section-title"><span>Surahs · السور</span></div>
       <input placeholder="🔍 اسم السورة أو رقمها" value={search} onChange={(e) => setSearch(e.target.value)} />
       <div style={{ marginTop: 10 }}>
         {shown.map((s) => (

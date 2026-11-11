@@ -4,7 +4,7 @@ const config: CapacitorConfig = {
   appId: 'com.masoud.hub',
   appName: 'Masoud Hub',
   webDir: 'dist',
-  backgroundColor: '#0e0e0e',
+  backgroundColor: '#080808',
   android: { allowMixedContent: false },
   plugins: {
     // Routes fetch() through native HTTP so Notion / AI APIs work without CORS limits.

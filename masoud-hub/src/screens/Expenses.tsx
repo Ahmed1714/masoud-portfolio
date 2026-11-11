@@ -135,7 +135,7 @@ export function Expenses() {
         </div>
       )}
       {other.length > 0 && <div className="muted">+ {other.length} عملية بعملات تانية (ظاهرة في القايمة)</div>}
-      <div className="section-title">العمليات</div>
+      <div className="section-title"><span>Transactions · العمليات</span></div>
       {[...items, ...other].length ? (
         [...items, ...other].map((x) => (
           <div key={x.id} className="list-item" onClick={() => setEditing(x)}>

@@ -9,19 +9,26 @@ export const PROVIDER_LABEL: Record<AIProvider, string> = {
   gemini: 'Gemini',
 };
 
-export function aiReady(): boolean {
+const hasKey = (p: AIProvider) => {
   const { ai } = getSettingsSync();
-  return Boolean(
-    (ai.provider === 'claude' && ai.claudeKey) ||
-      (ai.provider === 'openai' && ai.openaiKey) ||
-      (ai.provider === 'gemini' && ai.geminiKey),
-  );
+  return Boolean({ claude: ai.claudeKey, openai: ai.openaiKey, gemini: ai.geminiKey }[p]);
+};
+
+/** The chosen provider if it has a key, otherwise any provider that does. */
+export function effectiveProvider(): AIProvider | null {
+  const chosen = getSettingsSync().ai.provider;
+  if (hasKey(chosen)) return chosen;
+  return (['claude', 'gemini', 'openai'] as AIProvider[]).find(hasKey) ?? null;
+}
+
+export function aiReady(): boolean {
+  return effectiveProvider() !== null;
 }
 
 /** One-shot text completion against whichever provider is selected in Settings. */
 export async function aiComplete(system: string, user: string, provider?: AIProvider): Promise<string> {
   const { ai } = getSettingsSync();
-  const p = provider ?? ai.provider;
+  const p = provider ?? effectiveProvider() ?? ai.provider;
   if (!navigator.onLine) throw new AIError('محتاج إنترنت عشان الذكاء الاصطناعي يشتغل.');
 
   if (p === 'claude') {

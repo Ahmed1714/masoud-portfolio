@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Share } from '@capacitor/share';
 import { db, SYNC_TABLES } from '../db';
 import { Chips, toast } from '../components/ui';
+import { Logo } from '../components/brand';
 import { aiComplete, PROVIDER_LABEL } from '../lib/ai';
 import { createDatabase, extractNotionId, SCHEMAS, testConnection } from '../lib/notion';
 import { getSettingsSync, saveSettings, type AIProvider, type Settings } from '../lib/settings';
@@ -151,6 +152,28 @@ export function SettingsScreen() {
       </div>
 
       <div className="card">
+        <h3>🎙 تحويل التسجيلات لكتابة</h3>
+        <div className="muted">
+          التسجيل المفتوح (من غير حد) بيتحول لكتابة بـ Gemini أو OpenAI — Claude مش بيسمع صوت. لو حاطط المفتاحين، اختار مين يشتغل.
+        </div>
+        <div style={{ marginTop: 10 }}>
+          <Chips
+            options={[
+              { id: 'auto', label: 'تلقائي' },
+              { id: 'gemini', label: 'Gemini' },
+              { id: 'openai', label: 'OpenAI' },
+            ]}
+            value={ai.transcriber}
+            onChange={(transcriber) => setAI({ transcriber })}
+          />
+        </div>
+        {ai.provider !== 'gemini' && keyField('Gemini API key (للتحويل — مجاني)', ai.geminiKey, (geminiKey) => setAI({ geminiKey }), 'AIza…')}
+        {ai.provider !== 'openai' && keyField('OpenAI API key (اختياري)', ai.openaiKey, (openaiKey) => setAI({ openaiKey }), 'sk-…')}
+        <label>موديل OpenAI للتحويل</label>
+        <input className="ltr" value={ai.openaiTranscribeModel} onChange={(e) => setAI({ openaiTranscribeModel: e.target.value.trim() })} />
+      </div>
+
+      <div className="card">
         <h3>🔗 Notion</h3>
         <ol className="muted" style={{ paddingInlineStart: 18, margin: '0 0 8px' }}>
           <li>اعمل Integration من notion.so/my-integrations وانسخ الـ Secret.</li>
@@ -209,10 +232,8 @@ export function SettingsScreen() {
         </div>
       </div>
       <div className="muted" style={{ textAlign: 'center', margin: '20px 0' }}>
-        <span className="logo" style={{ fontSize: 22 }}>
-          M<span>.</span>
-        </span>{' '}
-        Masoud Hub v1.0
+        <Logo size={40} />
+        <div className="eyebrow" style={{ marginTop: 8 }}>Masoud Hub · v1.1</div>
       </div>
     </>
   );

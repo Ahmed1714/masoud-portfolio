@@ -88,7 +88,7 @@ function StatsEditor({ acc, onClose }: { acc: SocialAccount; onClose: () => void
       </button>
       {history.length > 1 && (
         <>
-          <div className="section-title">النمو</div>
+          <div className="section-title"><span>Growth · النمو</span></div>
           <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, height: 110 }}>
             {history.slice(-20).map((h) => (
               <div key={h.id} title={`${h.date}: ${h.followers}`} style={{ flex: 1, height: `${(h.followers / max) * 100}%`, background: 'var(--gold)', borderRadius: 4, minHeight: 4 }} />

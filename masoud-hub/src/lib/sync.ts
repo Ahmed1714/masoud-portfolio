@@ -3,6 +3,7 @@ import { App } from '@capacitor/app';
 import { db, onChange, SYNC_TABLES, type SyncMeta } from '../db';
 import { archivePage, upsertPage } from './notion';
 import { getSettingsSync } from './settings';
+import { processRecordings } from './transcribe';
 
 export type SyncState = {
   online: boolean;
@@ -74,6 +75,7 @@ let timer: ReturnType<typeof setTimeout> | undefined;
 function scheduleSync(delay = 3000) {
   clearTimeout(timer);
   timer = setTimeout(() => {
+    processRecordings(); // voice recordings waiting for internet
     if (getSettingsSync().notion.autoSync) syncNow();
     else countPending();
   }, delay);
