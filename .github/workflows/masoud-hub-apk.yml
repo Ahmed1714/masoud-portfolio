@@ -7,6 +7,9 @@ on:
       - '.github/workflows/masoud-hub-apk.yml'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   apk:
     runs-on: ubuntu-latest
@@ -40,7 +43,22 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleDebug --no-daemon
 
-      - uses: actions/upload-artifact@v4
+      - name: Rename APK
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk MasoudHub.apk
+
+      - uses: actions/upload-artifact@v5
         with:
           name: masoud-hub-apk
-          path: masoud-hub/android/app/build/outputs/apk/debug/app-debug.apk
+          path: masoud-hub/MasoudHub.apk
+
+      # Publishes a direct download link: /releases/latest/download/MasoudHub.apk
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: masoud-hub-latest
+          name: Masoud Hub (آخر نسخة)
+          body: |
+            حمّل **MasoudHub.apk** من تحت وسطّبه على الموبايل.
+            Build #${{ github.run_number }} — ${{ github.sha }}
+          make_latest: true
+          files: masoud-hub/MasoudHub.apk
