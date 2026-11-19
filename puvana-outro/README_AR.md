@@ -1,7 +1,7 @@
 # أوترو PUVANA – سكربت After Effects
 
 ## التشغيل
-1. خلي الملفين `PUVANA_Outro.jsx` و `puvana_logo.png` في نفس الفولدر.
+1. خلي `PUVANA_Outro.jsx` و `puvana_logo.png` و `puvana_outro_sfx.wav` في نفس الفولدر (الساوند بيتضاف للكومب تلقائي).
 2. افتح After Effects ← File ← Scripts ← Run Script File… واختار `PUVANA_Outro.jsx`.
 3. هيتعمل كومب `PUVANA_Outro` (1920×1080، 30fps، 6 ثواني) جاهز، اعمل File ← Save As عشان تحفظ ملف `.aep`.
 
@@ -21,3 +21,19 @@
 
 ## التعديل
 أول السكربت في جزء `CFG`: المدة، حجم اللوجو، نص التاجلاين (اكتب "" لإلغائه)، الخط، و `fadeOut` للاختفاء للأبيض في الآخر.
+
+## الساوند ديزين (`puvana_outro_sfx.wav`)
+- Pad هادي في الخلفية بيدخل ويخرج بنعومة
+- Whoosh مع نزول النقطة ← صوت قطرة مية (bloop) + رذاذ عند 0.55
+- Riser لامع مع رسم الإطار الدهبي
+- Impact (Sub boom) + أجراس عند ظهور اللوجو 1.10
+- رنات Chimes مع اللمعات الدهبي
+- Swish من الشمال لليمين مع الـ Shine + لمعات صغيرة
+- Whoosh خفيف مع التاجلاين، وريفيرب على الكل
+
+## الفيديو
+`PUVANA_Outro.mp4` – رندر جاهز 1080p / 30fps / H.264 + صوت AAC.
+
+## أدوات
+- `tools/make_sfx.py` يعيد توليد الساوند.
+- `tools/render_outro.py` يعيد رندر الفيديو بدون After Effects.

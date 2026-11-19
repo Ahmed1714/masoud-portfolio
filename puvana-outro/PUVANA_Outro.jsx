@@ -33,7 +33,8 @@
         font       : "Arial-BoldMT",
         bgVignette : true,         // very soft grey edges on the white background
         fadeOut    : false,        // fade to white at the end
-        logoFileName : "puvana_logo.png"
+        logoFileName : "puvana_logo.png",
+        sfxFileName  : "puvana_outro_sfx.wav"   // sound design (placed next to the script)
     };
 
     // Brand colours (picked from the logo)
@@ -66,6 +67,7 @@
     // keys: [[time, value, kind], ...]   kind: "e" ease, "s" strong ease, "l" linear, "ei" ease-in only, "eo" ease-out only
     function anim(prop, keys) {
         var i, k;
+        if (!prop) throw new Error("anim(): property not found");
         for (i = 0; i < keys.length; i++) prop.setValueAtTime(keys[i][0], keys[i][1]);
         var n = dimsOf(prop);
         for (i = 0; i < keys.length; i++) {
@@ -222,8 +224,8 @@
             var rw = addStroke(rl, rg, r === 1 ? COL.gold : COL.teal, 8 - r * 2);
             var t0 = T_IMPACT + r * 0.12;
             anim(vc(rl, rg).property("ADBE Vector Shape - Ellipse").property("ADBE Vector Ellipse Size"),
-                [[t0, [10, 10], "eo"], [t0 + 1.4, [ripSizes[r], ripSizes[r]], "ei"]]);
-            anim(rw(), [[t0, 8 - r * 2, "eo"], [t0 + 1.4, 0.5, "ei"]]);
+                [[t0, [10, 10], "l"], [t0 + 1.4, [ripSizes[r], ripSizes[r]], "ei"]]);
+            anim(rw(), [[t0, 8 - r * 2, "l"], [t0 + 1.4, 0.5, "ei"]]);
             anim(tr(rl, "ADBE Opacity"), [[t0, 0, "l"], [t0 + 0.08, 70, "l"], [t0 + 1.4, 0, "ei"]]);
             rl.inPoint = t0; rl.outPoint = t0 + 1.5;
             rl.motionBlur = true;
@@ -241,11 +243,11 @@
             addFill(dl, dg, d % 3 === 0 ? COL.gold : COL.teal);
             var st = T_IMPACT + rrange(0, 0.06);
             anim(tr(dl, "ADBE Position"), [
-                [st, [CX, CY], "eo"],
+                [st, [CX, CY], "l"],
                 [st + 0.28, [CX + dx * 0.65, CY + dy * 0.65 - rrange(60, 130)], "e"],
                 [st + 0.6, [CX + dx, CY + dy + 40], "ei"]
             ]);
-            anim(tr(dl, "ADBE Scale"), [[st, [0, 0], "eo"], [st + 0.1, [100, 100], "e"], [st + 0.6, [0, 0], "ei"]]);
+            anim(tr(dl, "ADBE Scale"), [[st, [0, 0], "l"], [st + 0.1, [100, 100], "e"], [st + 0.6, [0, 0], "ei"]]);
             dl.inPoint = st; dl.outPoint = st + 0.65;
             dl.motionBlur = true;
         }
@@ -305,14 +307,14 @@
         tr(logo, "ADBE Position").setValue([CX, CY, 0]);
         function sc(p) { var v = S * p / 100; return [v, v, v]; }
         anim(tr(logo, "ADBE Scale"), [
-            [T_LOGO, sc(0), "eo"],
+            [T_LOGO, sc(0), "l"],
             [T_LOGO + 0.30, sc(110), "e"],
             [T_LOGO + 0.48, sc(96.5), "e"],
             [T_LOGO + 0.62, sc(100.8), "e"],
             [T_LOGO + 0.75, sc(100), "eo"],
             [DUR, sc(103), "l"]
         ]);
-        anim(tr(logo, "ADBE Rotate Y"), [[T_LOGO, -80, "eo"], [T_LOGO + 0.7, 0, "s"]]);
+        anim(tr(logo, "ADBE Rotate Y"), [[T_LOGO, -80, "l"], [T_LOGO + 0.7, 0, "s"]]);
         anim(tr(logo, "ADBE Opacity"), [[T_LOGO, 0, "l"], [T_LOGO + 0.12, 100, "l"]]);
         logo.inPoint = T_LOGO;
 
@@ -348,9 +350,9 @@
             addStar(spl, spg, big, big * 0.18);
             addFill(spl, spg, p % 4 === 0 ? COL.teal : (p % 2 ? COL.gold : COL.goldLight));
             var s0 = T_LOGO + 0.15 + rrange(0, 0.3), sd = rrange(0.7, 1.1);
-            anim(tr(spl, "ADBE Position"), [[s0, [sx, sy], "eo"], [s0 + sd, [ex, ey], "ei"]]);
+            anim(tr(spl, "ADBE Position"), [[s0, [sx, sy], "l"], [s0 + sd, [ex, ey], "ei"]]);
             anim(tr(spl, "ADBE Scale"), [[s0, [0, 0], "e"], [s0 + sd * 0.35, [100, 100], "e"], [s0 + sd, [0, 0], "e"]]);
-            anim(tr(spl, "ADBE Rotation"), [[s0, 0, "l"], [s0 + sd, rrange(90, 200), "l"]]);
+            anim(tr(spl, "ADBE Rotate Z"), [[s0, 0, "l"], [s0 + sd, rrange(90, 200), "l"]]);
             spl.inPoint = s0; spl.outPoint = s0 + sd + 0.05;
             spl.motionBlur = true;
         }
@@ -363,7 +365,7 @@
             addFill(tl, tg, COL.white);
             var tt = twk[tw][2];
             anim(tr(tl, "ADBE Scale"), [[tt, [0, 0], "e"], [tt + 0.22, [100, 100], "e"], [tt + 0.5, [0, 0], "e"]]);
-            anim(tr(tl, "ADBE Rotation"), [[tt, 0, "l"], [tt + 0.5, 90, "l"]]);
+            anim(tr(tl, "ADBE Rotate Z"), [[tt, 0, "l"], [tt + 0.5, 90, "l"]]);
             var glow = fx(tl, "ADBE Glo2");
             try { glow.property("ADBE Glo2-0003").setValue(12); } catch (e) {}   // glow radius
             tl.inPoint = tt; tl.outPoint = tt + 0.55;
@@ -393,7 +395,7 @@
             tAnim.name = "Tracking In";
             tAnim.property("ADBE Text Animator Properties").addProperty("ADBE Text Tracking Amount");
             var trkAmt = animators.property(1).property("ADBE Text Animator Properties").property("ADBE Text Tracking Amount");
-            anim(trkAmt, [[2.4, 120, "eo"], [3.4, 0, "s"]]);
+            anim(trkAmt, [[2.4, 120, "l"], [3.4, 0, "s"]]);
 
             var tblur = fx(txt, "ADBE Gaussian Blur 2");
             anim(tblur.property("ADBE Gaussian Blur 2-0001"), [[2.4, 14, "e"], [3.1, 0, "e"]]);
@@ -413,13 +415,24 @@
                 addPath(ln, lg, [[sgn * gap, 0], [sgn * (gap + len), 0]], [[0, 0], [0, 0]], [[0, 0], [0, 0]], false);
                 addStroke(ln, lg, COL.gold, 3);
                 var lt = addTrim(ln, lg);
-                anim(lt("ADBE Vector Trim End"), [[2.6, 0, "eo"], [3.4, 100, "s"]]);
+                anim(lt("ADBE Vector Trim End"), [[2.6, 0, "l"], [3.4, 100, "s"]]);
                 ln.inPoint = 2.6;
                 ln.motionBlur = true;
             }
         }
 
-        // ---------- 11. Optional fade to white ----------
+        // ---------- 11. Sound design ----------
+        var sfxFile = new File(File($.fileName).parent.fsName + "/" + CFG.sfxFileName);
+        if (sfxFile.exists) {
+            var sfx = proj.importFile(new ImportOptions(sfxFile));
+            sfx.parentFolder = folder;
+            var sfxL = comp.layers.add(sfx);
+            sfxL.name = "SFX - Sound Design";
+            sfxL.startTime = 0;
+            sfxL.moveToEnd();
+        }
+
+        // ---------- 12. Optional fade to white ----------
         if (CFG.fadeOut) {
             var fade = comp.layers.addSolid(COL.white, "Fade To White", W, H, 1, DUR);
             anim(tr(fade, "ADBE Opacity"), [[DUR - 0.6, 0, "e"], [DUR, 100, "e"]]);
