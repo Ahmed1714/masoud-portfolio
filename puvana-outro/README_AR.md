@@ -3,7 +3,7 @@
 ## التشغيل
 1. خلي `PUVANA_Outro.jsx` و `puvana_logo.png` و `puvana_outro_sfx.wav` في نفس الفولدر (الساوند بيتضاف للكومب تلقائي).
 2. افتح After Effects ← File ← Scripts ← Run Script File… واختار `PUVANA_Outro.jsx`.
-3. هيتعمل كومب `PUVANA_Outro` (1920×1080، 30fps، 6 ثواني) جاهز، اعمل File ← Save As عشان تحفظ ملف `.aep`.
+3. هيتعمل بروجكت جديد فيه كومب `PUVANA_Outro` (1920×1080، 30fps، 6 ثواني) ويتحفظ تلقائي كـ `PUVANA_Outro.aep` جنب السكربت — بعد كده افتح الـ `.aep` مباشرة في أي وقت.
 
 > لو ظهرت رسالة صلاحيات: Edit ← Preferences ← Scripting & Expressions ← فعّل "Allow Scripts to Write Files and Access Network".
 

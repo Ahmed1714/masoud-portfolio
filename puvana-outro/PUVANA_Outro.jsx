@@ -185,7 +185,8 @@
     app.beginUndoGroup("PUVANA Outro");
     try {
         var W = CFG.width, H = CFG.height, DUR = CFG.duration;
-        var proj = app.project || app.newProject();
+        var proj = app.newProject();            // fresh, clean project
+        if (!proj) proj = app.project;
 
         var folder = proj.items.addFolder("PUVANA Outro");
         var footage = proj.importFile(new ImportOptions(logoFile));
@@ -440,7 +441,11 @@
 
         comp.openInViewer();
         comp.time = 3.5;
-        alert("PUVANA outro is ready!\nComp: " + CFG.compName + "  (" + DUR + "s @ " + CFG.fps + "fps)\n\nTip: File > Save As to keep the .aep project.");
+        var aep = new File(File($.fileName).parent.fsName + "/" + CFG.compName + ".aep");
+        var saved = false;
+        try { proj.save(aep); saved = true; } catch (eSave) {}
+        alert("PUVANA outro is ready!\nComp: " + CFG.compName + "  (" + DUR + "s @ " + CFG.fps + "fps)\n\n" +
+              (saved ? "Project saved:\n" + aep.fsName : "Use File > Save As to keep the .aep project."));
     } catch (err) {
         alert("Script error (line " + err.line + "):\n" + err.toString());
     } finally {
